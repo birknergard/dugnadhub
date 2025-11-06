@@ -14,4 +14,4 @@ Scaling of the infrastructure is handled through Firebase's subscription model a
 In terms of the user experience 
 
 # Sources
-https://www.salesforce.com/blog/benefits-of-saas-smb/
+https://www.salesforce.com/blog/benefits-of-saas-smbs

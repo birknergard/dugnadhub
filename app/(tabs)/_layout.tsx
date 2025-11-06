@@ -1,5 +1,4 @@
 import { Tabs } from 'expo-router';
-import '../../global.css'
 
 export default function TabLayout() {
   return (
@@ -8,6 +7,14 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
+          headerShown: false
+        }}
+      />
+      <Tabs.Screen
+        name="create"
+        options={{
+          title: 'Create',
+          headerShown: false
         }}
       />
     </Tabs>
