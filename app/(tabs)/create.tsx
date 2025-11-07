@@ -9,7 +9,7 @@ export default function Create() {
 
   return (
     <Main>
-      <StepIndicator currentStep={step} />
+      <StepIndicator currentStep={step} setStep={setStep} />
       <NavigationButtons>
         {step >= 2 && (
           <TextButton

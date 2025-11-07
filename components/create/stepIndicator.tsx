@@ -1,16 +1,22 @@
 import { AntDesign } from '@expo/vector-icons';
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 
-export default function StepIndicator({ currentStep }: { currentStep: number }) {
+export default function StepIndicator({
+  currentStep,
+  setStep,
+}: {
+  currentStep: number;
+  setStep: (step: number) => void;
+}) {
   return (
     <View className={s.main}>
       {Array.from({ length: currentStep }).map((_, step) => (
         <View className={s.step.body}>
-          <View className={s.step.container}>
+          <Pressable className={s.step.container} onPress={() => setStep(step + 1)}>
             <Text className={s.step.text} key={step}>
               {step + 1}
             </Text>
-          </View>
+          </Pressable>
           <AntDesign name={step === currentStep - 1 ? 'arrow-right' : 'line'} size={32} />
         </View>
       ))}
