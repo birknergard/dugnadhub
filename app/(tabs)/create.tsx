@@ -1,3 +1,4 @@
+import FormSection from 'components/create/formSection';
 import StepIndicator from 'components/create/stepIndicator';
 import TextButton from 'components/general/textButton';
 import { useState } from 'react';
@@ -9,7 +10,10 @@ export default function Create() {
 
   return (
     <Main>
-      <StepIndicator currentStep={step} setStep={setStep} />
+      <StepContainer>
+        <StepIndicator currentStep={step} setStep={setStep} />
+      </StepContainer>
+      <FormSection step={step} />
       <NavigationButtons>
         {step >= 2 && (
           <TextButton
@@ -52,4 +56,9 @@ const NavigationButtons = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+`;
+
+const StepContainer = styled.View`
+  justify-self: start;
+  align-self: start;
 `;
