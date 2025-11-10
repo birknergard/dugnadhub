@@ -1,4 +1,4 @@
-import { createConstants } from 'constants/create';
+import { createConstants } from 'constants/createConstants';
 import { Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import {

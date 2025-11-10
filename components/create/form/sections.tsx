@@ -1,6 +1,6 @@
 import { Text, TextInput, View } from 'react-native';
 
-export function CategorySelection({}: {}) {
+export function CategorySelection({ }: {}) {
   return (
     <View className={s.main}>
       <Text>Category</Text>
@@ -29,7 +29,7 @@ export function TitleAndDescriptionSelection({
           className={s.fieldContainer.textField}
           onChangeText={(e) => onChangeTitle(e)}
           value={title}
-          placeholder="Your new title ..."
+          placeholder="Write a title ..."
         />
       </View>
       <View className={s.fieldContainer.base}>
@@ -47,7 +47,7 @@ export function TitleAndDescriptionSelection({
   );
 }
 
-export function DateAndTimeSelection({}: {}) {
+export function DateAndTimeSelection({ }: {}) {
   return (
     <View className={s.main}>
       <Text>Date and time</Text>
@@ -55,7 +55,7 @@ export function DateAndTimeSelection({}: {}) {
   );
 }
 
-export function PlaceSelection({}: {}) {
+export function PlaceSelection({ }: {}) {
   return (
     <View className={s.main}>
       <Text>Place</Text>
@@ -63,7 +63,7 @@ export function PlaceSelection({}: {}) {
   );
 }
 
-export function PersonsSelection({}: {}) {
+export function PersonsSelection({ }: {}) {
   return (
     <View className={s.main}>
       <Text>Persons</Text>
@@ -71,7 +71,7 @@ export function PersonsSelection({}: {}) {
   );
 }
 
-export function ImageUpload({}: {}) {
+export function ImageUpload({ }: {}) {
   return (
     <View className={s.main}>
       <Text>Images</Text>
@@ -82,8 +82,8 @@ export function ImageUpload({}: {}) {
 const s = {
   main: 'w-full h-full flex flex-col items-center justify-evenly bg-dugnad-red rounded-xl p-4',
   fieldContainer: {
-    base: 'w-full flex flex-col items-start',
-    desc: 'text-md text-white',
+    base: 'w-full flex flex-col items-start gap-2',
+    desc: 'text-md text-white font-bold',
     textField: 'w-full text-md rounded-md bg-dugnad-white p-2',
   },
 };

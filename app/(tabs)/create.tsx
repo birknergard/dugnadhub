@@ -2,7 +2,8 @@ import DugnadForm from 'components/create/form/form';
 import StepIndicator from 'components/create/stepIndicator';
 import TextButton from 'components/general/textButton';
 import { useState } from 'react';
-import styled from 'styled-components/native';
+import { View } from 'react-native';
+import styled, { css } from 'styled-components/native';
 
 export default function Create() {
   const [step, setStep] = useState(1);
@@ -24,6 +25,7 @@ export default function Create() {
             }}
           />
         )}
+        <View></View>
         {step <= 5 && (
           <TextButton
             text="Next"
@@ -49,7 +51,7 @@ const Main = styled.View`
 
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: $;
 `;
 
 const StyledDugnadForm = styled(DugnadForm)`
