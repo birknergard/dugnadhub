@@ -1,8 +1,7 @@
-import FormSection from 'components/create/form/form';
+import DugnadForm from 'components/create/form/form';
 import StepIndicator from 'components/create/stepIndicator';
 import TextButton from 'components/general/textButton';
 import { useState } from 'react';
-import { View } from 'react-native';
 import styled from 'styled-components/native';
 
 export default function Create() {
@@ -13,7 +12,7 @@ export default function Create() {
       <StepContainer>
         <StepIndicator currentStep={step} setStep={setStep} />
       </StepContainer>
-      <FormSection step={step} />
+      <StyledDugnadForm step={step} />
       <NavigationButtons>
         {step >= 2 && (
           <TextButton
@@ -42,16 +41,19 @@ export default function Create() {
 
 const Main = styled.View`
   background-color: #e4e3d5;
-  width: 100%;
+  width: 100vw;
   height: 100%;
   display: flex;
 
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 1rem;
 
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+`;
+
+const StyledDugnadForm = styled(DugnadForm)`
+  width: 100%;
 `;
 
 const NavigationButtons = styled.View`

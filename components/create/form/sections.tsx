@@ -80,10 +80,10 @@ export function ImageUpload({}: {}) {
 }
 
 const s = {
-  main: 'w-full h-full flex flex-col items-center justify-evenly bg-dugnad-red rounded-xl p-3',
+  main: 'w-full h-full flex flex-col items-center justify-evenly bg-dugnad-red rounded-xl p-4',
   fieldContainer: {
-    base: 'w-full flex flex-col items-center',
-    desc: 'text-lg text-white text-start',
-    textField: 'w-3/4 text-lg rounded-md bg-dugnad-white p-2',
+    base: 'w-full flex flex-col items-start',
+    desc: 'text-md text-white',
+    textField: 'w-full text-md rounded-md bg-dugnad-white p-2',
   },
 };

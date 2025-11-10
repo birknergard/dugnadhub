@@ -11,7 +11,7 @@ import {
 } from './sections';
 import { useState } from 'react';
 
-export default function FormSection({ step }: { step: number }) {
+export default function DugnadForm({ step }: { step: number }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
@@ -36,31 +36,32 @@ export default function FormSection({ step }: { step: number }) {
   ];
 
   return (
-    <Main>
+    <>
       {createConstants.sections.map(
         (section, i) =>
           step === i + 1 && (
-            <View className={s.section.base}>
+            <Main>
               <Text className={s.section.title}>{section.title}</Text>
               {/* <Text className={s.section.description}>{section.description}</Text> */}
               {SectionList[i]}
-            </View>
+            </Main>
           )
       )}
-    </Main>
+    </>
   );
 }
 
 const Main = styled.View`
   display: flex;
+  width: 100%;
   flex-direction: column;
   justify-center: center;
   align-items: center;
+  gap: 1rem;
 `;
 
 const s = {
   section: {
-    base: 'w-full flex flex-col items-center justify-center gap-4',
     title: 'text-3xl text-dugnad-red font-bold',
     description: 'text-lg',
   },
