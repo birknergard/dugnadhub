@@ -1,9 +1,28 @@
-import { Text, TextInput, View } from 'react-native';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { categoryConstants, Category } from 'constants/createConstants';
+import { useState } from 'react';
+import { Pressable, Text, TextInput, View } from 'react-native';
 
 export function CategorySelection({ }: {}) {
+  const [selected, setSelected] = useState<Category | null>(null)
   return (
     <View className={s.main}>
-      <Text>Category</Text>
+      <Text className={s.fieldContainer.desc}>Please select a category from the list below</Text>
+      {categoryConstants.map(category => (
+        <Pressable
+          className={s.selectBox.container.box + (selected === category ? s.selectBox.selected : '')}
+          onPress={() => setSelected(category)}
+        >
+          <View className={'w-3/4'}>
+            <Text className={s.selectBox.container.text.title}>{category.name}</Text>
+            <Text className={s.selectBox.container.text.desc}>{category.description}</Text>
+          </View>
+          <FontAwesome6
+            name={category.iconName}
+            size={40}
+          />
+        </Pressable>
+      ))}
     </View>
   );
 }
@@ -85,5 +104,15 @@ const s = {
     base: 'w-full flex flex-col items-start gap-2',
     desc: 'text-md text-white font-bold',
     textField: 'w-full text-md rounded-md bg-dugnad-white p-2',
+  },
+  selectBox: {
+    container: {
+      box: 'w-full h-fit flex flex-row justify-between items-center border-dugnad-white rounded-xl bg-dugnad-white p-8',
+      text: {
+        title: 'text-lg',
+        desc: 'text-md truncate'
+      }
+    },
+    selected: 'border-2 bg-dugnad-yellow p-8'
   },
 };

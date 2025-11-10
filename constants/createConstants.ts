@@ -35,3 +35,48 @@ export const createConstants: CreateConstants = {
     }
   ]
 }
+
+export interface Category {
+  name: string
+  iconName: string
+  description: string
+}
+
+export const categoryConstants: Category[] = [
+  {
+    name: "Maintenance & Upkeep",
+    iconName: "screwdriver-wrench",
+    description: "Regular tasks that keep shared areas clean, functional, and in good condition.",
+  },
+  {
+    name: "Beautification & Improvement",
+    iconName: "seedling",
+    description: "Projects that make the surroundings more welcoming and attractive.",
+  },
+  {
+    name: "Safety & Accessibility",
+    iconName: "shield-heart",
+    description: "Efforts to ensure all spaces are safe and usable for everyone.",
+  },
+  {
+    name: "Community Building",
+    iconName: "people-group",
+    description: "Activities that strengthen social bonds and promote collaboration.",
+  },
+  {
+    name: "Environmental Sustainability",
+    iconName: "leaf",
+    description: "Initiatives focused on protecting nature and promoting sustainable living.",
+  },
+  {
+    name: "Fundraising & Financial Support",
+    iconName: "coins",
+    description: "Events or tasks aimed at raising funds for shared goals or projects.",
+  },
+  {
+    name: "Educational & Awareness",
+    iconName: "lightbulb",
+    description: "Activities that share knowledge, skills, or raise awareness within the community.",
+  },
+]
+
