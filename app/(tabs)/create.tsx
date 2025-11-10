@@ -1,4 +1,4 @@
-import FormSection from 'components/create/formSection';
+import FormSection from 'components/create/form/form';
 import StepIndicator from 'components/create/stepIndicator';
 import TextButton from 'components/general/textButton';
 import { useState } from 'react';
@@ -45,6 +45,10 @@ const Main = styled.View`
   width: 100%;
   height: 100%;
   display: flex;
+
+  padding-left: 1rem;
+  padding-right: 1rem;
+
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
