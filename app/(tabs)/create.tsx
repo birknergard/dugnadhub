@@ -48,13 +48,12 @@ const Main = styled.View({
   alignItems: 'stretch'
 });
 
+const StepContainer = styled(StepIndicator)({})
+
 const StepButtons = styled.View({
-  width: '100%',
+  width: "100%",
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center",
 })
 
-const StepContainer = styled(StepIndicator)({
-
-})
