@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
+    "@react-native-community/datetimepicker": "^8.4.4",
     "expo": "^54.0.0",
     "expo-constants": "~18.0.10",
     "expo-linking": "~8.0.8",
@@ -20,6 +21,7 @@
     "firebase": "^12.4.0",
     "nativewind": "latest",
     "react": "19.1.0",
+    "react-datepicker": "^8.9.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.4",
     "react-native-reanimated": "~4.1.1",

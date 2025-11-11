@@ -1,5 +1,5 @@
 import { createConstants } from 'constants/createConstants';
-import { Text, View } from 'react-native';
+import { Text, View, ScrollView } from 'react-native';
 import styled from 'styled-components/native';
 import {
   CategorySelection,
@@ -8,7 +8,7 @@ import {
   PersonsSelection,
   PlaceSelection,
   TitleAndDescriptionSelection,
-} from './sections';
+} from './sections/dugnadSections';
 import { useState } from 'react';
 
 export default function DugnadForm({ step }: { step: number }) {
@@ -16,9 +16,8 @@ export default function DugnadForm({ step }: { step: number }) {
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const [postcode, setPostcode] = useState('');
-  const [date, setDate] = useState<Date | undefined>();
-  const [timeFrom, setTimeFrom] = useState<Date | undefined>();
-  const [timeTo, setTimeTo] = useState<Date | undefined>();
+  const [date, setDate] = useState<Date>(new Date());
+  const [timeFrom, setTimeStart] = useState<Date>();
   //const images = useState('')
 
   const SectionList = [
@@ -30,35 +29,26 @@ export default function DugnadForm({ step }: { step: number }) {
       onChangeDescription={setDescription}
     />,
     <PlaceSelection />,
-    <DateAndTimeSelection />,
+    <DateAndTimeSelection date={date} setDate={setDate} />,
     <PersonsSelection />,
     <ImageUpload />,
   ];
 
   return (
-    <>
-      {createConstants.sections.map(
-        (section, i) =>
-          step === i + 1 && (
-            <Main>
-              <Text className={s.section.title}>{section.title}</Text>
-              {/* <Text className={s.section.description}>{section.description}</Text> */}
-              {SectionList[i]}
-            </Main>
-          )
-      )}
-    </>
+    <Main>
+      <Text className={s.section.title}>{createConstants.sections[step - 1].title}</Text>
+      {/* <Text className={s.section.description}>{section.description}</Text> */}
+      {SectionList[step - 1]}
+    </Main>
   );
 }
 
-const Main = styled.View`
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  justify-center: center;
-  align-items: center;
-  gap: 1rem;
-`;
+const Main = styled.View({
+  flexDirection: "column",
+  justifyCenter: "center",
+  alignItems: "center",
+  gap: 10,
+})
 
 const s = {
   section: {

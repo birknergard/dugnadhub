@@ -1,15 +1,24 @@
 import { FontAwesome6 } from '@expo/vector-icons';
 import { categoryConstants, Category } from 'constants/createConstants';
 import { useState } from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Platform, Pressable, Text, TextInput, View } from 'react-native';
+import DatePicker from 'react-datepicker';
+import RNDateTimePicker, { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 export function CategorySelection({ }: {}) {
   const [selected, setSelected] = useState<Category | null>(null)
+
+  if (Platform.OS === 'android') return (
+    <View className={`${s.main}`}>
+      <Text>Fuck you kill yourself</Text>
+    </View>
+  );
+
   return (
     <View className={s.main}>
       <Text className={s.fieldContainer.desc}>Please select a category from the list below</Text>
-      {categoryConstants.map(category => (
-        <Pressable
+      {categoryConstants.map((category, i) => (
+        <Pressable key={i}
           className={s.selectBox.container.box + (selected === category ? s.selectBox.selected : '')}
           onPress={() => setSelected(category)}
         >
@@ -25,6 +34,7 @@ export function CategorySelection({ }: {}) {
       ))}
     </View>
   );
+
 }
 
 export function TitleAndDescriptionSelection({
@@ -66,18 +76,35 @@ export function TitleAndDescriptionSelection({
   );
 }
 
-export function DateAndTimeSelection({ }: {}) {
+export function PlaceSelection({ }: {}) {
   return (
     <View className={s.main}>
-      <Text>Date and time</Text>
+      <Text>Address</Text>
+      <Text>Postcode</Text>
+      <Text>City</Text>
     </View>
   );
 }
 
-export function PlaceSelection({ }: {}) {
+export function DateAndTimeSelection({ date, setDate }: {
+  date: Date,
+  setDate: (date: Date) => void
+}) {
+  const onChange = (event: DateTimePickerEvent, selectedDate?: Date | undefined | void) => {
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+  };
+
   return (
     <View className={s.main}>
-      <Text>Place</Text>
+      <View>
+        {Platform.OS === 'web' && <>
+          <DatePicker selected={date} onChange={(e) => setDate(e!)} />
+        </>}
+        {Platform.OS === 'android' && <>
+          <RNDateTimePicker value={date} onChange={onChange} />
+        </>}
+      </View>
     </View>
   );
 }
@@ -85,7 +112,7 @@ export function PlaceSelection({ }: {}) {
 export function PersonsSelection({ }: {}) {
   return (
     <View className={s.main}>
-      <Text>Persons</Text>
+      <Text>Persons require</Text>
     </View>
   );
 }
@@ -99,7 +126,7 @@ export function ImageUpload({ }: {}) {
 }
 
 const s = {
-  main: 'w-full h-full flex flex-col items-center justify-evenly bg-dugnad-red rounded-xl p-4',
+  main: 'w-full flex flex-col items-center justify-evenly bg-dugnad-red rounded-xl p-4 gap-2',
   fieldContainer: {
     base: 'w-full flex flex-col items-start gap-2',
     desc: 'text-md text-white font-bold',
@@ -107,12 +134,12 @@ const s = {
   },
   selectBox: {
     container: {
-      box: 'w-full h-fit flex flex-row justify-between items-center border-dugnad-white rounded-xl bg-dugnad-white p-8',
+      box: 'w-full flex flex-row justify-between items-center border-dugnad-white rounded-xl bg-dugnad-white p-2',
       text: {
-        title: 'text-lg',
-        desc: 'text-md truncate'
+        title: 'text-md font-bold',
+        desc: 'text-sm'
       }
     },
-    selected: 'border-2 bg-dugnad-yellow p-8'
+    selected: 'border-2 bg-dugnad-yellow p-2'
   },
 };

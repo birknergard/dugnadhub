@@ -1,20 +1,18 @@
-import DugnadForm from 'components/create/form/form';
+import DugnadForm from 'components/create/form/dugnadForm';
 import StepIndicator from 'components/create/stepIndicator';
 import TextButton from 'components/general/textButton';
 import { useState } from 'react';
 import { View } from 'react-native';
-import styled, { css } from 'styled-components/native';
+import styled from 'styled-components/native';
 
 export default function Create() {
   const [step, setStep] = useState(1);
 
   return (
     <Main>
-      <StepContainer>
-        <StepIndicator currentStep={step} setStep={setStep} />
-      </StepContainer>
-      <StyledDugnadForm step={step} />
-      <NavigationButtons>
+      <StepIndicator currentStep={step} setStep={setStep} />
+      <DugnadForm step={step} />
+      <StepButtons>
         {step >= 2 && (
           <TextButton
             text="Back"
@@ -36,37 +34,27 @@ export default function Create() {
             }}
           />
         )}
-      </NavigationButtons>
+      </StepButtons>
     </Main>
   );
 }
 
-const Main = styled.View`
-  background-color: #e4e3d5;
-  width: 100vw;
-  height: 100%;
-  display: flex;
+const Main = styled.View({
+  flex: 1,
+  backgroundColor: '#e4e3d5',
+  padding: 20,
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  alignItems: 'stretch'
+});
 
-  padding: 1rem;
+const StepButtons = styled.View({
+  width: '100%',
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+})
 
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: $;
-`;
+const StepContainer = styled(StepIndicator)({
 
-const StyledDugnadForm = styled(DugnadForm)`
-  width: 100%;
-`;
-
-const NavigationButtons = styled.View`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const StepContainer = styled.View`
-  justify-self: start;
-  align-self: start;
-`;
+})

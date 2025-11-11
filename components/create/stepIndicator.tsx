@@ -11,7 +11,7 @@ export default function StepIndicator({
   return (
     <View className={s.main}>
       {Array.from({ length: currentStep }).map((_, step) => (
-        <View className={s.step.body}>
+        <View key={step} className={s.step.body}>
           <Pressable
             className={`${s.step.container.base} ${step === currentStep - 1 ? s.step.container.current : s.step.container.normal}`}
             onPress={() => setStep(step + 1)}>
@@ -35,6 +35,6 @@ const s = {
       current: 'bg-dugnad-red -m-1',
       normal: 'bg-dugnad-yellow -m-1',
     },
-    text: 'text-center text-xl font-semibold',
+    text: 'text-xl font-semibold bg-sky-500',
   },
 };
