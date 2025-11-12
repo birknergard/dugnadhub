@@ -1,17 +1,20 @@
 import { TextButton } from 'components/general/buttons';
 import { Text, View } from 'react-native';
+import styled from 'styled-components/native';
 
 export default function Home() {
   return (
-    <View
-      className={main}
-      style={{
-        width: '100%',
-        height: '100%',
-      }}>
-
-    </View>
+    <Main>
+    </Main>
   );
 }
 
-const main = 'bg-dugnad-white flex flex-1 flex-col justify-center items-center';
+const Main = styled.View({
+  flex: 1,
+  backgroundColor: '#e4e3d5',
+  padding: 20,
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  alignItems: 'stretch'
+});
+
