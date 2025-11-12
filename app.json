@@ -10,7 +10,26 @@
       "tsconfigPaths": true
     },
     "plugins": [
-      "expo-router"
+      [
+        "expo-router",
+        {}
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Vi trenger kamera for å ta dugnadsbilder",
+          "microphonePermission": "Vi trenger mikrofon ved videoopptak",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Gi tilgang til bilder for å velge fra galleriet",
+          "cameraPermission": "Gi tilgang til kamera for å ta bilder"
+        }
+      ],
+      "expo-web-browser"
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
