@@ -8,6 +8,7 @@ import PlaceSelection from './sections/placeSection';
 import DateAndTimeSelection from './sections/dateTimeSection';
 import PersonsSelection from './sections/personSection';
 import ImageUpload from './sections/imageSection';
+import { Column, Label, Row, Title } from 'components/general/styledTags';
 
 export default function DugnadForm({ step }: { step: number }) {
   const [title, setTitle] = useState('');
@@ -46,26 +47,13 @@ export default function DugnadForm({ step }: { step: number }) {
 
   return (
     <Main>
-      <Text className={s.section.title}>{createConstants.sections[step - 1].title}</Text>
+      <Title>{createConstants.sections[step - 1].title}</Title>
       {/* <Text className={s.section.description}>{section.description}</Text> */}
-      <View className={`${s.main}`}>
-        {SectionList[step - 1]}
-      </View>
+      {SectionList[step - 1]}
     </Main>
   );
 }
 
-const Main = styled.View({
-  flexDirection: "column",
-  justifyCenter: "center",
-  alignItems: "center",
-  gap: 10,
+const Main = styled(Column)({
+  gap: 10
 })
-
-const s = {
-  main: 'w-full flex flex-col items-center justify-evenly bg-dugnad-red rounded-xl p-4 gap-2',
-  section: {
-    title: 'text-3xl text-dugnad-red font-bold',
-    description: 'text-lg',
-  },
-};

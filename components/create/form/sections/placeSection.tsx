@@ -1,4 +1,6 @@
+import { Heading, Input, Label, PlainText, Row } from "components/general/styledTags";
 import { Text, TextInput, View } from "react-native";
+import styled from "styled-components/native";
 
 export default function PlaceSelection({ address, onAddressChange, postcode, onPostcodeChange }: {
   address: string,
@@ -7,43 +9,38 @@ export default function PlaceSelection({ address, onAddressChange, postcode, onP
   onPostcodeChange: (postcode: string) => void
 }) {
 
-  const handlePostCodeChange = () => {
-
-  }
-
   return (
     <>
-      <Text className={s.desc}>Address</Text>
-      <TextInput
-        className={s.text.textField}
+      <Label>Please provide an Address</Label>
+      <Input
         value={address}
         onChangeText={(e) => onAddressChange(e)}
         textContentType="streetAddressLine2"
+        placeholder="Write the address line ..."
       />
-      <Text>Postcode</Text>
-      <View className={s.postcode.container}>
-        <TextInput
-          className={`${s.text.textField} w-14`}
+      <Label>Please provide Postcode and City</Label>
+      <StyledRow>
+        <StyledInput
           value={postcode}
           onChangeText={(e) => onPostcodeChange(e)}
           textContentType="postalCode"
           keyboardType='number-pad'
           inputMode="numeric"
+          placeholder="ex.5050"
         />
-        <Text>City</Text>
-      </View>
+        <PlainText>City will appear here</PlainText>
+      </StyledRow>
     </>
   );
 }
 
-const s = {
-  desc: 'text-md text-white font-bold',
-  text: {
-    title: 'text-md font-bold',
-    desc: 'text-sm',
-    textField: 'text-md rounded-md bg-dugnad-white p-2',
-  },
-  postcode: {
-    container: 'flex flex-row items-center justify-center gap-2',
-  }
-};
+const StyledRow = styled(Row)({
+  flexGrow: 1,
+  alignSelf: 'flex-start',
+  gap: 10
+})
+
+const StyledInput = styled(Input)({
+  flex: 0,
+  width: 100
+})

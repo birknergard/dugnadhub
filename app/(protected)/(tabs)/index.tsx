@@ -1,5 +1,4 @@
-import IconButton from 'components/general/iconButton';
-import TextButton from 'components/general/textButton';
+import { TextButton } from 'components/general/buttons';
 import { Text, View } from 'react-native';
 
 export default function Home() {
@@ -9,8 +8,10 @@ export default function Home() {
       style={{
         width: '100%',
         height: '100%',
-      }}></View>
+      }}>
+
+    </View>
   );
 }
 
-const main = 'bg-dugnad-red w-screen h-screen flex flex-col justify-center items-center';
+const main = 'bg-dugnad-white flex flex-1 flex-col justify-center items-center';

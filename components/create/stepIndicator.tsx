@@ -1,4 +1,5 @@
 import { AntDesign } from '@expo/vector-icons';
+import { Column, PlainText, Row } from 'components/general/styledTags';
 import { View, Text, Pressable } from 'react-native';
 
 export default function StepIndicator({
@@ -9,34 +10,27 @@ export default function StepIndicator({
   setStep: (step: number) => void;
 }) {
   return (
-    <View className={s.main}>
+    <Row>
       {Array.from({ length: currentStep }).map((_, step) => (
-        <View key={step} className={s.step.body}>
+        <Row>
           <Pressable
-            className={`${s.step.container.base}
-              ${step === currentStep - 1 ? s.step.container.current : s.step.container.normal}
+            className={`${s.base}
+              ${step === currentStep - 1 ? s.current : s.normal}
             `}
             onPress={() => setStep(step + 1)}>
-            <Text className={s.step.text} key={step}>
+            <PlainText key={step}>
               {step + 1}
-            </Text>
+            </PlainText>
           </Pressable>
           <AntDesign name={step === currentStep - 1 ? 'arrow-right' : 'line'} size={32} />
-        </View>
+        </Row>
       ))}
-    </View>
+    </Row>
   );
 }
 
 const s = {
-  main: 'flex flex-row',
-  step: {
-    body: 'flex flex-row items-center justify-center',
-    container: {
-      base: 'flex justify-center items-center rounded-full border-2 border-black p-1 w-9 h-9',
-      current: 'bg-dugnad-red -m-1',
-      normal: 'bg-dugnad-yellow -m-1',
-    },
-    text: 'text-xl font-semibold bg-sky-500',
-  },
+  base: 'flex justify-center items-center rounded-full border-2 border-black p-1 w-9 h-9',
+  current: 'bg-dugnad-red -m-1',
+  normal: 'bg-dugnad-yellow -m-1',
 };

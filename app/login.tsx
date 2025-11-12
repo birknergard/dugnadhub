@@ -3,7 +3,7 @@ import { Pressable, Text, TextInput, View } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import { signUp } from 'services/authService';
 import { useAuthSession } from "providers/authSessionProvider";
-import TextButton from "components/general/textButton";
+import { TextButton } from "components/general/buttons";
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {

@@ -9,6 +9,7 @@ export default function DateAndTimeSelection({ date, setDate }: {
   date: Date,
   setDate: (date: Date) => void
 }) {
+
   const onChange = (event: DateTimePickerEvent, selectedDate?: Date | undefined | void) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);

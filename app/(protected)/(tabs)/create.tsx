@@ -1,6 +1,6 @@
 import DugnadForm from 'components/create/form/dugnadForm';
 import StepIndicator from 'components/create/stepIndicator';
-import TextButton from 'components/general/textButton';
+import { TextButton } from 'components/general/buttons';
 import { useState } from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components/native';
