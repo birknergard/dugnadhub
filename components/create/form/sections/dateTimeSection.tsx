@@ -7,8 +7,7 @@ import RNDateTimePicker, { DateTimePickerAndroid, DateTimePickerEvent } from '@r
 import styled from 'styled-components/native';
 import { colors, Column, Input, Label, Row } from 'components/general/styledTags';
 import "react-datepicker/dist/react-datepicker.css";
-import DurationPicker from 'components/general/durationInput';
-import NumberInput from 'components/general/numberIncrementPicker';
+import NumberInput from 'components/general/numberInput';
 
 export default function DateAndTimeSelection({ date, setDate }: {
   date: Date,
@@ -74,6 +73,7 @@ export default function DateAndTimeSelection({ date, setDate }: {
         <StyledLabel>Provide duration (hours)</StyledLabel>
         <NumberInput
           value={duration}
+          suffix='hours'
           onChange={handleDurationChange}
         />
       </StyledColumn>

@@ -18,6 +18,7 @@ export default function DugnadForm({ step }: { step: number }) {
   const [postcode, setPostcode] = useState('');
   const [date, setDate] = useState<Date>(new Date());
   const [timeFrom, setTimeStart] = useState<Date>();
+  const [people, setPeople] = useState<number>(0);
   //const images = useState('')
 
   const SectionList = [
@@ -41,7 +42,10 @@ export default function DugnadForm({ step }: { step: number }) {
       date={date}
       setDate={setDate}
     />,
-    <PersonsSelection />,
+    <PersonsSelection
+      people={people}
+      onPeopleChange={setPeople}
+    />,
     <ImageUpload />,
   ];
 
