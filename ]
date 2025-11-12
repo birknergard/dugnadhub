@@ -1,0 +1,84 @@
+import { useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
+import * as WebBrowser from "expo-web-browser";
+import { signUp } from 'services/authService';
+import { useAuthSession } from "providers/authSessionProvider";
+WebBrowser.maybeCompleteAuthSession();
+
+export default function Login() {
+
+  const { signIn, signOut } = useAuthSession()
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [isRegister, setIsRegister] = useState(false);
+
+  const tryLogin = async () => {
+    try {
+      if (isRegister) {
+        await signUp(email, password, username);
+      } else {
+        signIn(email, password);
+      }
+    } catch (error: any) {
+      console.error('Login failed')
+    }
+  }
+
+  const tryLogout = async () => {
+    try {
+      signOut();
+    } catch (error: any) {
+      console.error('Logout failed')
+    }
+  }
+
+  return (
+    <View className={s.mainContainer}>
+      <View className={s.loginContainer}>
+        <Text className={s.title}>DugnadHub</Text>
+        <View>
+          <Text className={s.label}>Email</Text>
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+          />
+          <Text className={s.label}>Password</Text>
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            textContentType="password"
+          />
+          <View className={s.buttonContainer}>
+            <Pressable className={s.button}
+              onPress={async () => {
+                await tryLogin()
+              }}
+            >
+              <Text className={s.buttonText}>Login</Text>
+            </Pressable>
+            <Pressable className={s.button}
+              onPress={async () => {
+                await tryLogout()
+              }}
+            >
+              <Text className={s.buttonText}>Logout</Text>
+            </Pressable>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+const s = {
+  mainContainer: 'flex flex-1 flex-col items-center justify-center bg-dugnad-white',
+  title: 'text-3xl',
+  loginContainer: 'flex flex-col items-center justify-between bg-dugnad-green p-24 rounded-3xl',
+  label: 'text-xl',
+  buttonContainer: 'flex flex-row items-center justify-evenly gap-8',
+  button: '',
+  buttonText: ''
+}
