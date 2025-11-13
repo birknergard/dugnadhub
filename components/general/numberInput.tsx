@@ -24,8 +24,6 @@ export default function NumberInput({ value, suffix, onChange }: {
 }
 
 const StyledRow = styled(Row)({
-  flex: 1,
-  alignSelf: 'stretch',
   gap: 10
 })
 

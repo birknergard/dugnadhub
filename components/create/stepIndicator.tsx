@@ -11,8 +11,8 @@ export default function StepIndicator({
 }) {
   return (
     <Row>
-      {Array.from({ length: currentStep }).map((_, step) => (
-        <Row>
+      {Array.from<number>({ length: currentStep }).map((_, step) => (
+        <Row key={step}>
           <Pressable
             className={`${s.base}
               ${step === currentStep - 1 ? s.current : s.normal}
@@ -22,7 +22,7 @@ export default function StepIndicator({
               {step + 1}
             </PlainText>
           </Pressable>
-          <AntDesign name={step === currentStep - 1 ? 'arrow-right' : 'line'} size={32} />
+          <AntDesign name={step === currentStep - 1 ? 'arrow-right' : 'line'} size={25} />
         </Row>
       ))}
     </Row>
@@ -30,7 +30,7 @@ export default function StepIndicator({
 }
 
 const s = {
-  base: 'flex justify-center items-center rounded-full border-2 border-black p-1 w-9 h-9',
+  base: 'flex justify-center items-center rounded-full border-2 border-black p-1 w-10 h-10',
   current: 'bg-dugnad-red -m-1',
   normal: 'bg-dugnad-yellow -m-1',
 };

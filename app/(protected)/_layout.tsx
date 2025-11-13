@@ -31,13 +31,11 @@ export default function ProtectedLayout() {
   }
 
   return (
-    <SafeAreaProvider>
-      <Stack>
-        <Stack.Screen name='(tabs)' options={{
-          headerShown: false,
-        }} />
-        <Stack.Screen name='dugnadDetails/[id]' />
-      </Stack>
-    </SafeAreaProvider>
+    <Stack>
+      <Stack.Screen name='(tabs)' options={{
+        headerShown: false,
+      }} />
+      <Stack.Screen name='dugnadDetails/[id]' />
+    </Stack>
   );
 }

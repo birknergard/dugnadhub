@@ -35,12 +35,10 @@ export default function PlaceSelection({ address, onAddressChange, postcode, onP
 }
 
 const StyledRow = styled(Row)({
-  flexGrow: 1,
   alignSelf: 'flex-start',
   gap: 10
 })
 
 const StyledInput = styled(Input)({
-  flex: 0,
   width: 100
 })

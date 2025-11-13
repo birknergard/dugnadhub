@@ -5,9 +5,11 @@ import { Platform, Pressable, Text, TextInput, View } from 'react-native';
 import DatePicker from 'react-datepicker';
 import RNDateTimePicker, { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import styled from 'styled-components/native';
-import { colors, Column, Input, Label, Row } from 'components/general/styledTags';
+import { colors, Column, Input, Label, PlainText, Row } from 'components/general/styledTags';
 import "react-datepicker/dist/react-datepicker.css";
 import NumberInput from 'components/general/numberInput';
+import { TextButton } from 'components/general/buttons';
+import { format } from 'date-fns';
 
 export default function DateAndTimeSelection({ date, setDate }: {
   date: Date,
@@ -19,8 +21,11 @@ export default function DateAndTimeSelection({ date, setDate }: {
     setDate(currentDate);
   };
 
-  const [time, setStartTime] = useState<Date>(new Date())
-  const [duration, setDuration] = useState<number>(0)
+  const [time, setStartTime] = useState<Date>(new Date());
+  const [duration, setDuration] = useState<number>(0);
+
+  const [isShowingAndroidDatePicker, setShowAndroidDatePicker] = useState(false);
+  const [isShowingAndroidTimePicker, setShowAndroidTimePicker] = useState(false);
 
   const handleDurationChange = (duration: number) => {
     if (1 <= duration && duration <= 8) {
@@ -28,7 +33,20 @@ export default function DateAndTimeSelection({ date, setDate }: {
     }
   };
 
-  const datePickerByPlatform = Platform.OS === 'web' ? (
+  const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    if (event.type === 'set' && selectedDate) {
+      setDate(selectedDate);
+    }
+    setShowAndroidDatePicker(false);
+  };
+
+  const handleTimeChange = (event: DateTimePickerEvent, selectedTime?: Date) => {
+    if (event.type === 'set' && selectedTime) {
+      setStartTime(selectedTime);
+    }
+    setShowAndroidTimePicker(false);
+
+  }; const datePickerByPlatform = Platform.OS === 'web' ? (
     <StyledDatePicker
       className='text-start'
       selected={date}
@@ -37,7 +55,20 @@ export default function DateAndTimeSelection({ date, setDate }: {
       timeIntervals={15}
     />
   ) : (
-    <RNDateTimePicker mode='date' value={date} onChange={onChange} />
+    <Column>
+      <AndroidPicker
+        onPress={() => setShowAndroidDatePicker(true)}
+      >
+        {format(date, 'dd/MM/yyyy')}
+      </AndroidPicker>
+      {isShowingAndroidDatePicker && (
+        <RNDateTimePicker
+          mode='date'
+          value={date}
+          onChange={handleDateChange}
+        />
+      )}
+    </Column>
   )
 
   const timePickerByPlatform = Platform.OS === 'web' ? (
@@ -51,7 +82,20 @@ export default function DateAndTimeSelection({ date, setDate }: {
       timeIntervals={15} // minute intervals
     />
   ) : (
-    <RNDateTimePicker mode='time' value={date} onChange={onChange} />
+    <Column>
+      <AndroidPicker
+        onPress={() => setShowAndroidTimePicker(true)}
+      >
+        {format(time, 'HH:mm')}
+      </AndroidPicker>
+      {isShowingAndroidTimePicker && (
+        <RNDateTimePicker
+          mode="time"
+          value={time}
+          onChange={handleTimeChange}
+        />
+      )}
+    </Column>
   )
   return (
     <StyledColumn>
@@ -95,6 +139,9 @@ const DatePickerContainer = styled(View)({
   borderWidth: 1,
   borderRadius: 5,
   padding: 5,
+})
+
+const AndroidPicker = styled(PlainText)({
 })
 
 const StyledDatePicker = styled(DatePicker).attrs({

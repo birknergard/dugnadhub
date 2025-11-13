@@ -4,6 +4,7 @@ import * as WebBrowser from "expo-web-browser";
 import { signUp } from 'services/authService';
 import { useAuthSession } from "providers/authSessionProvider";
 import { TextButton } from "components/general/buttons";
+import { Label } from "components/general/styledTags";
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
@@ -35,7 +36,7 @@ export default function Login() {
       <View className={s.loginContainer}>
         <Text className={s.title}>DugnadHub</Text>
         {!isRegister ? (<>
-          <Text>Login</Text>
+          <Label>Login</Label>
           <View className={s.fieldContainer}>
             <Text className={s.label}>Email</Text>
             <TextInput className={s.input}
@@ -105,12 +106,18 @@ export default function Login() {
           </View>
           <View className={s.buttonContainer}>
             <TextButton
-              text='Register'
+              text='Cancel'
               iconName=''
               iconPosition=''
               onTap={async () => {
                 await tryLogin();
               }}
+            />
+            <TextButton
+              text='Register'
+              iconName=''
+              iconPosition=''
+              onTap={() => setIsRegister(false)}
             />
           </View>
         </>)}
@@ -122,10 +129,10 @@ export default function Login() {
 const s = {
   mainContainer: 'flex flex-1 flex-col items-center justify-center bg-dugnad-white',
   title: 'text-3xl',
-  loginContainer: 'flex flex-col items-center justify-between bg-dugnad-red rounded-3xl p-8 gap-4',
-  fieldContainer: '',
+  loginContainer: 'w-80 flex flex-col items-center justify-between bg-dugnad-red rounded-3xl p-8 gap-4',
+  fieldContainer: 'flex flex-col self-stretch',
   label: 'text-xl',
-  buttonContainer: 'flex flex-col items-center justify-center gap-2',
+  buttonContainer: 'flex flex-row items-center justify-center gap-2',
   button: 'bg-dugnad-yellow p-4',
   buttonText: 'text-xl',
   input: 'bg-white text-lg rounded-lg p-2',

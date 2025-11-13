@@ -1,6 +1,16 @@
 import styled from "styled-components/native";
 
-export const colors = {
+export interface DugnadColors {
+  yellow: string,
+  pink: string,
+  green: string,
+  red: string,
+  white: string,
+  beige: string,
+  bg: string,
+}
+
+export const colors: DugnadColors = {
   yellow: '#FCE1AC',
   pink: '#F5AFBF',
   green: '#BBE19D',
@@ -16,7 +26,19 @@ export const Column = styled.View({
   alignItems: 'center',
 })
 
+export const ColumnPressable = styled.Pressable({
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+})
+
 export const Row = styled.View({
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+})
+
+export const RowPressable = styled.Pressable({
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
@@ -24,9 +46,8 @@ export const Row = styled.View({
 
 export const Input = styled.TextInput({
   fontFamily: 'monospace',
+  width: 350,
   fontSize: 16,
-  flex: 1,
-  alignSelf: 'stretch',
   backgroundColor: colors.white,
   borderRadius: 5,
   padding: 5,
@@ -40,16 +61,12 @@ export const Title = styled.Text({
 })
 
 export const Label = styled.Text({
-  flex: 1,
-  alignSelf: 'stretch',
   fontFamily: 'sans-serif',
   fontWeight: 600,
-  fontSize: 20
+  fontSize: 18
 })
 
 export const Heading = styled.Text({
-  flex: 1,
-  alignSelf: 'stretch',
   fontSize: 18,
   fontWeight: 700
 })
