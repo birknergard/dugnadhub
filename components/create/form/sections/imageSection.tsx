@@ -1,17 +1,16 @@
 import { Column, Label, PlainText, Row } from "components/general/styledTags";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
 import { CameraView } from "expo-camera";
 import { launchImageLibraryAsync, MediaTypeOptions, useCameraPermissions } from "expo-image-picker";
-import { useRef, useState, useSyncExternalStore } from "react";
+import { useRef, useState } from "react";
 import { IconButton, TextButton } from "components/general/buttons";
 import styled from "styled-components/native";
 
-export default function ImageUpload({ onCameraMode }: { onCameraMode: (any: any) => void }) {
+export default function ImageUpload({ setShowUI }: { setShowUI: (boolean: any) => void }) {
   const cameraRef = useRef<CameraView | null>(null)
   const [permission, requestPermission] = useCameraPermissions();
   const [images, setImages] = useState<string[]>([])
-  const [mode, setMode] = useState<'camera' | 'picker' | null>(null)
-
+  const [mode, setMode] = useState<'permissions' | 'camera' | 'picker' | null>(null)
 
   const captureImage = async () => {
     const photo = await cameraRef.current?.takePictureAsync();
@@ -31,11 +30,19 @@ export default function ImageUpload({ onCameraMode }: { onCameraMode: (any: any)
 
     if (!result.canceled) {
       const uris = result.assets.map((a) => a.uri);
-      setImages([...images, ...uris]); // append selected image
+      setImages([...images, ...uris]);
 
     };
 
   }
+
+  // TODO: Wait for permission
+  if (mode === permission) return (
+    <>
+
+    </>
+  );
+
   if (mode === 'camera') return (
     <Column>
       <CameraContainer>
@@ -46,7 +53,10 @@ export default function ImageUpload({ onCameraMode }: { onCameraMode: (any: any)
         />
       </CameraContainer>
       <CameraButtons>
-        <TextButton text='Cancel' onTap={() => setMode(null)} iconName='' iconPosition='' />
+        <TextButton text='Ok' onTap={() => {
+          setMode(null)
+          setShowUI(true)
+        }} iconName='' iconPosition='' />
         <IconButton iconName="camera" onTap={async () => await captureImage()} />
       </CameraButtons>
     </Column>
@@ -68,6 +78,7 @@ export default function ImageUpload({ onCameraMode }: { onCameraMode: (any: any)
         onTap={() => {
           requestPermission()
           setMode('camera')
+          setShowUI(false)
         }}
         iconName=''
         iconPosition='left'
@@ -95,7 +106,6 @@ const StyledCamera = styled(CameraView)({
 const CameraButtons = styled(Row)({
   gap: 10
 })
-
 
 const StyledLabel = styled(Label)({
   textAlign: 'center'

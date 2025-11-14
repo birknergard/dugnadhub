@@ -10,7 +10,10 @@ import PersonsSelection from './sections/personSection';
 import ImageUpload from './sections/imageSection';
 import { Column, Label, Row, Title } from 'components/general/styledTags';
 
-export default function DugnadForm({ step }: { step: number }) {
+export default function DugnadForm({ step, setShowUI }: {
+  step: number,
+  setShowUI: (bool: boolean) => void
+}) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState<string>('');
   const [description, setDescription] = useState('');
@@ -46,12 +49,11 @@ export default function DugnadForm({ step }: { step: number }) {
       people={people}
       onPeopleChange={setPeople}
     />,
-    <ImageUpload />,
+    <ImageUpload setShowUI={setShowUI} />,
   ];
 
   return (
     <Main>
-      <Title>{createConstants.sections[step - 1].title}</Title>
       {/* <Text className={s.section.description}>{section.description}</Text> */}
       {SectionList[step - 1]}
     </Main>
