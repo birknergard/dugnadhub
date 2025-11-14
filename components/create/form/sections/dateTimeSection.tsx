@@ -11,14 +11,14 @@ import NumberInput from 'components/general/numberInput';
 import { TextButton } from 'components/general/buttons';
 import { format } from 'date-fns';
 
-export default function DateAndTimeSelection({ date, setDate }: {
-  date: Date,
-  setDate: (date: Date) => void
+export default function DateAndTimeSelection({ dateTime, setDateTime }: {
+  dateTime: Date,
+  setDateTime: (date: Date) => void
 }) {
 
   const onChange = (event: DateTimePickerEvent, selectedDate?: Date | undefined | void) => {
-    const currentDate = selectedDate || date;
-    setDate(currentDate);
+    const currentDate = selectedDate || dateTime;
+    setDateTime(currentDate);
   };
 
   const [time, setStartTime] = useState<Date>(new Date());
@@ -35,7 +35,7 @@ export default function DateAndTimeSelection({ date, setDate }: {
 
   const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (event.type === 'set' && selectedDate) {
-      setDate(selectedDate);
+      setDateTime(selectedDate);
     }
     setShowAndroidDatePicker(false);
   };
@@ -46,11 +46,13 @@ export default function DateAndTimeSelection({ date, setDate }: {
     }
     setShowAndroidTimePicker(false);
 
-  }; const datePickerByPlatform = Platform.OS === 'web' ? (
+  };
+
+  const datePickerByPlatform = Platform.OS === 'web' ? (
     <StyledDatePicker
       className='text-start'
-      selected={date}
-      onChange={(e) => setDate(e!)}
+      selected={dateTime}
+      onChange={(e) => setDateTime(e!)}
       dateFormat={'P'}
       timeIntervals={15}
     />
@@ -59,12 +61,12 @@ export default function DateAndTimeSelection({ date, setDate }: {
       <AndroidPicker
         onPress={() => setShowAndroidDatePicker(true)}
       >
-        {format(date, 'dd/MM/yyyy')}
+        {format(dateTime, 'dd/MM/yyyy')}
       </AndroidPicker>
       {isShowingAndroidDatePicker && (
         <RNDateTimePicker
           mode='date'
-          value={date}
+          value={dateTime}
           onChange={handleDateChange}
         />
       )}

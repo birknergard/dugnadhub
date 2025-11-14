@@ -16,6 +16,7 @@ export default function Create() {
       <StyledStepIndicator $hidden={!isShowingUI} currentStep={step} setStep={setStep} />
       <Column>
         <SectionTitle $hidden={!isShowingUI}>{createConstants.sections[step - 1].title}</SectionTitle>
+        {/* <Heading className={s.section.description}>{section.description}</Heading> */}
         <DugnadForm step={step} setShowUI={setShowUI} />
       </Column>
       {isShowingUI &&

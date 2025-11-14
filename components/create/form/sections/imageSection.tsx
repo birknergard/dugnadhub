@@ -6,16 +6,19 @@ import { useRef, useState } from "react";
 import { IconButton, TextButton } from "components/general/buttons";
 import styled from "styled-components/native";
 
-export default function ImageUpload({ setShowUI }: { setShowUI: (boolean: any) => void }) {
+export default function ImageUpload({ images, onImageAdd, setShowUI }: {
+  images: string[],
+  onImageAdd: (images: string[]) => void
+  setShowUI: (boolean: any) => void
+}) {
   const cameraRef = useRef<CameraView | null>(null)
   const [permission, requestPermission] = useCameraPermissions();
-  const [images, setImages] = useState<string[]>([])
   const [mode, setMode] = useState<'permissions' | 'camera' | 'picker' | null>(null)
 
   const captureImage = async () => {
     const photo = await cameraRef.current?.takePictureAsync();
     if (photo?.uri) {
-      setImages([...images, photo.uri]);
+      onImageAdd([...images, photo.uri]);
     }
   }
 
@@ -30,7 +33,7 @@ export default function ImageUpload({ setShowUI }: { setShowUI: (boolean: any) =
 
     if (!result.canceled) {
       const uris = result.assets.map((a) => a.uri);
-      setImages([...images, ...uris]);
+      onImageAdd([...images, ...uris]);
 
     };
 
