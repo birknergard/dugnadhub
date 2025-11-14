@@ -31,7 +31,6 @@ export default function DugnadForm({
 
   // TODO: Submit completed doc
   const submit = async (): Promise<boolean> => {
-    // Create dugnad object
     const dugnad: Dugnad = {
       title: title,
       description: description,
@@ -43,7 +42,6 @@ export default function DugnadForm({
       requiredPersons: people,
       images: [],
     };
-    // Upload all images
     for (let i = 0; i < images.length; i++) {
       const uploaded = await StorageService.uploadImage(images[i]);
       if (uploaded === 'ERROR') {
