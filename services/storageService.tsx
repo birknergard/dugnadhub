@@ -1,8 +1,8 @@
 import { getDownloadURL, uploadBytes } from 'firebase/storage';
 import { getStorageReference } from 'firebaseConfig';
 
-export const StorageService = (() => {
-  const getImage = async () => {};
+const StorageService = (() => {
+  const getImage = async () => { };
 
   const uploadImage = async (uri: string): Promise<string> => {
     const fetchResponse = await fetch(uri);
@@ -32,3 +32,5 @@ export const StorageService = (() => {
     uploadImage,
   };
 })();
+
+export default StorageService;

@@ -1,14 +1,14 @@
-import { Dugnad } from 'models/dugnad';
+import Dugnad from 'models/dugnad';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from 'firebaseConfig';
 
-export const FirestoreService = (() => {
-  const getDugnader = async () => {};
+const FirestoreService = (() => {
+  const getDugnader = async () => { };
 
   const postDugnad = async (dugnad: Dugnad): Promise<boolean> => {
     return addDoc(collection(db, 'dugnad'), dugnad)
       .then((r) => {
-        // TODO: Upload images to cloud storage
+        console.info("Posted dugnad with id: ", { r })
         return true;
       })
       .catch((e) => {
@@ -22,3 +22,5 @@ export const FirestoreService = (() => {
     postDugnad,
   };
 })();
+
+export default FirestoreService;

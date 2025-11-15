@@ -9,6 +9,13 @@ import {
   useState,
 } from "react";
 import * as authService from "services/authService";
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
+// Setting up tanstackquery, for better use of http calls
+const queryClient = new QueryClient();
 
 type AuthContextType = {
   signIn: (username: string, password: string) => void;
@@ -69,7 +76,9 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
         isLoading: isLoading,
       }}
     >
-      {children}
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
     </AuthContext.Provider>
   );
 }

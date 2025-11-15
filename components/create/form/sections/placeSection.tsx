@@ -1,6 +1,8 @@
 import { Heading, Input, Label, PlainText, Row } from "components/general/styledTags";
 import { Text, TextInput, View } from "react-native";
 import styled from "styled-components/native";
+import { useQuery } from "@tanstack/react-query";
+import GeocodingService from "services/geocodingService";
 
 export default function PlaceSelection({ address, onAddressChange, postcode, onPostcodeChange }: {
   address: string,
@@ -8,6 +10,20 @@ export default function PlaceSelection({ address, onAddressChange, postcode, onP
   postcode: string,
   onPostcodeChange: (postcode: string) => void
 }) {
+
+  const { data: city } = useQuery({
+    queryKey: ['cityByPostCode', postcode],
+    queryFn: () => {
+      if (postcode.length === 4) {
+        return GeocodingService.getCityByPostcode(postcode)
+          .then(r => r)
+          .catch(e => {
+            console.error("API Error: ", e);
+            return null;
+          })
+      } else return null
+    }
+  })
 
   return (
     <>
@@ -28,7 +44,7 @@ export default function PlaceSelection({ address, onAddressChange, postcode, onP
           inputMode="numeric"
           placeholder="ex.5050"
         />
-        <PlainText>City will appear here</PlainText>
+        <PlainText>{city ?? 'Your city will appear here'}</PlainText>
       </StyledRow>
     </>
   );
