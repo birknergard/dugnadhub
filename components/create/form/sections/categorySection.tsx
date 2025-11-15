@@ -10,42 +10,41 @@ export default function CategorySelection({ category, onCategorySelect }: {
   onCategorySelect: (category: string) => void
 }) {
   const [selected, setSelected] = useState<Category | null>(null)
-  const [isShowingList, setShowingList] = useState(true);
+  const [isShowingSelected, setShowingSelected] = useState(true);
 
   return (
     <BodyColumn>
-      {isShowingList && (
-        <ListColumn>
-          <Label>Please select a category from the list below</Label>
-          {
-            categoryConstants.map((category, i) => (
-              <ListItem
-                key={i + 10}
-                onPress={() => {
-                  onCategorySelect(category.name)
-                  setSelected(category)
-                  setShowingList(false)
-                }}
-              >
-                <Label>{category.name}</Label>
-                <FontAwesome6
-                  name={category.iconName}
-                  size={20}
-                />
-              </ListItem>
-            ))
-          }
-        </ListColumn>
-      )}
+      <ListColumn>
+        <Label>Please select a category from the list below</Label>
+        {
+          categoryConstants.map((category, i) => (
+            <ListItem
+              key={i + 10}
+              $selected={selected === category}
+              onPress={() => {
+                onCategorySelect(category.name)
+                setSelected(category)
+                setShowingSelected(false)
+              }}
+            >
+              <Label>{category.name}</Label>
+              <FontAwesome6
+                name={category.iconName}
+                size={20}
+              />
+            </ListItem>
+          ))
+        }
+      </ListColumn>
       {selected &&
         <Pressable
           className={s.selectBox.container + ' ' + s.selectBox.selected}
           onPress={() => {
-            setShowingList(true)
+            setShowingSelected(true)
           }}
         >
           <Row>
-            <Heading>{selected.name}</Heading>
+            <Heading>{`${selected.name}  `}</Heading>
             <FontAwesome6
               name={selected.iconName}
               size={20}
@@ -66,17 +65,18 @@ const ListColumn = styled(Column)({
   gap: 10,
 })
 
-const ListItem = styled(RowPressable)({
+const ListItem = styled(RowPressable)<{ $selected: boolean }>(props => ({
   alignSelf: 'stretch',
   gap: 5,
   borderWidth: 1,
   padding: 5,
-  backgroundColor: colors.white
-})
+  backgroundColor: props.$selected ? colors.beige : colors.white,
+  borderRadius: 10
+}))
 
 const s = {
   selectBox: {
-    container: 'flex flex-col items-center border-dugnad-white rounded-xl bg-dugnad-white p-2 m-2',
-    selected: 'border-2 bg-dugnad-yellow p-2'
-  },
+    container: 'flex flex-col items-center rounded-xl p-4 m-2 rounded-3xl',
+    selected: 'border-2 bg-dugnad-yellow p-2',
+  }
 };

@@ -32,6 +32,10 @@ export const createConstants: CreateConstants = {
     {
       title: 'Images (optional)',
       description: 'Provide some relevant images if you wish.'
+    },
+    {
+      title: 'Preview',
+      description: 'See a preview of your dugnad'
     }
   ]
 }

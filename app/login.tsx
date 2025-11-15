@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import * as WebBrowser from "expo-web-browser";
-import { signUp } from 'services/authService';
 import { useAuthSession } from "providers/authSessionProvider";
 import { TextButton } from "components/general/buttons";
-import { Label } from "components/general/styledTags";
 import { useRouter } from "expo-router";
 WebBrowser.maybeCompleteAuthSession();
 
@@ -22,7 +20,7 @@ export default function Login() {
         try {
             signIn(email, password);
         } catch (error: any) {
-            return `Login failed:\n${error}`;
+            return `Login failed:\\n${error}`;
         }
     }
 
@@ -67,6 +65,7 @@ export default function Login() {
                     onTap={() => router.push('register')}
                 />
             </View>
+            <Text className={s.label}>{errorMessage}</Text>
         </View>
     );
 }

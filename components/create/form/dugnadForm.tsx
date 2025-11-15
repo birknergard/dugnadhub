@@ -11,6 +11,7 @@ import { addHours } from 'date-fns';
 import FirestoreService from 'services/dugnadService';
 import { Column } from 'components/general/styledTags';
 import StorageService from 'services/storageService';
+import PreviewDugnad from './preview';
 
 export default function DugnadForm({
   step,

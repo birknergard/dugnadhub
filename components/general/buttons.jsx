@@ -14,26 +14,32 @@ export function IconButton({ iconName, onTap }) {
   );
 }
 
-export function TextButton({ text, iconName, onTap, iconPosition }) {
-  const icon = <FontAwesome6 name={iconName} size={30} />;
+export function TextButton({ text, iconName, onTap, iconPosition, color }) {
+  const icon = <FontAwesome6 name={iconName} size={20} />;
   return (
-    <StyledButton $colors={colors.yellow} onPress={onTap}>
+    <StyledButton $color={color} onPress={onTap}>
       {iconName && iconPosition == 'right' && icon}
-      <Label>{text}</Label>
+      <ButtonLabel>{text}</ButtonLabel>
       {iconName && iconPosition == 'left' && icon}
     </StyledButton>
   );
 }
 
-const StyledButton = styled.Pressable`
-  background-color: ${colors.yellow};
+const StyledButton = styled.Pressable < { $color } > `
+  background-color: ${props => props.$color};
   padding: 10px;
   border-radius: 10px;
   flex-direction: row;
+  gap: 10px;
   justify-self: stretch;
   justify-content: center;
   align-items: center;
 `
+
+const ButtonLabel = styled(Label)({
+  fontSize: 22,
+  textAlign: 'center'
+})
 
 const StyledIconButton = styled(StyledButton)`
   border-radius: 50px;
