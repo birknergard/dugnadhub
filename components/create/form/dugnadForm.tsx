@@ -8,7 +8,7 @@ import PersonsSelection from './sections/personSection';
 import ImageUpload from './sections/imageSection';
 import Dugnad from 'models/dugnad';
 import { addHours } from 'date-fns';
-import FirestoreService from 'services/firestoreService';
+import FirestoreService from 'services/dugnadService';
 import { Column } from 'components/general/styledTags';
 import StorageService from 'services/storageService';
 

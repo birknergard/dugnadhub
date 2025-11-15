@@ -11,18 +11,10 @@ export default function PlaceSelection({ address, onAddressChange, postcode, onP
   onPostcodeChange: (postcode: string) => void
 }) {
 
+  // Using tanstack@query for seamless refetch logic and clean code
   const { data: city } = useQuery({
     queryKey: ['cityByPostCode', postcode],
-    queryFn: () => {
-      if (postcode.length === 4) {
-        return GeocodingService.getCityByPostcode(postcode)
-          .then(r => r)
-          .catch(e => {
-            console.error("API Error: ", e);
-            return null;
-          })
-      } else return null
-    }
+    queryFn: () => postcode.length === 4 ? GeocodingService.getCityByPostcode(postcode) : null
   })
 
   return (

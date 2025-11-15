@@ -2,7 +2,7 @@ import Dugnad from 'models/dugnad';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from 'firebaseConfig';
 
-const FirestoreService = (() => {
+const DugnadService = (() => {
   const getDugnader = async () => { };
 
   const postDugnad = async (dugnad: Dugnad): Promise<boolean> => {
@@ -12,7 +12,7 @@ const FirestoreService = (() => {
         return true;
       })
       .catch((e) => {
-        console.error('Firestore error: ', e);
+        console.error('Dugnad API error: ', e);
         return false;
       });
   };
@@ -23,4 +23,4 @@ const FirestoreService = (() => {
   };
 })();
 
-export default FirestoreService;
+export default DugnadService;
