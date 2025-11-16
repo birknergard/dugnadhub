@@ -1,8 +1,8 @@
-import { Column, Label, PlainText, Row } from "components/general/styledTags";
-import { StyleSheet } from "react-native";
+import { colors, Column, Heading, Label, PlainText, Row } from "components/general/styledTags";
+import { StyleSheet, Text } from "react-native";
 import { CameraView } from "expo-camera";
 import { launchImageLibraryAsync, MediaTypeOptions, useCameraPermissions } from "expo-image-picker";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IconButton, TextButton } from "components/general/buttons";
 import styled from "styled-components/native";
 
@@ -13,7 +13,7 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
 }) {
   const cameraRef = useRef<CameraView | null>(null)
   const [permission, requestPermission] = useCameraPermissions();
-  const [mode, setMode] = useState<'permissions' | 'camera' | 'picker' | null>(null)
+  const [mode, setMode] = useState<| 'camera' | 'picker' | null>(null)
 
   const captureImage = async () => {
     const photo = await cameraRef.current?.takePictureAsync();
@@ -34,29 +34,27 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
     if (!result.canceled) {
       const uris = result.assets.map((a) => a.uri);
       onImageAdd([...images, ...uris]);
-
     };
 
   }
 
-  // TODO: Wait for permission
-  if (mode === permission) return (
-    <>
-
-    </>
-  );
-
   if (mode === 'camera') return (
     <Column>
       <CameraContainer>
-        <StyledCamera
-          style={StyleSheet.absoluteFill}
-          ref={cameraRef}
-          facing="back"
-        />
+        {(!permission?.granted) ? (
+          <Column>
+            <Text className="">Please give permissions to use camera</Text>
+          </Column>
+        ) : (
+          <StyledCamera
+            style={StyleSheet.absoluteFill}
+            ref={cameraRef}
+            facing="back"
+          />
+        )}
       </CameraContainer>
       <CameraButtons>
-        <TextButton text='Ok' onTap={() => {
+        <TextButton color={colors.yellow} text='Ok' onTap={() => {
           setMode(null)
           setShowUI(true)
         }} iconName='' iconPosition='' />
@@ -69,6 +67,7 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
     <StyledColumn>
       <StyledLabel>Upload some relevant images for your dugnad</StyledLabel>
       <TextButton
+        color={colors.yellow}
         text="Pick image from device"
         onTap={() => {
           pickImage()
@@ -77,6 +76,7 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
         iconPosition='left'
       />
       <TextButton
+        color={colors.yellow}
         text="Take picture with camera"
         onTap={() => {
           requestPermission()
@@ -87,9 +87,6 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
         iconPosition='left'
       />
       <StyledLabel>Images ({images.length})</StyledLabel>
-      {images.map(image => (
-        <PlainText>{image}</PlainText>
-      ))}
     </StyledColumn>
   );
 }

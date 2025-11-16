@@ -1,11 +1,21 @@
-import DugnadForm from 'components/create/form/dugnadForm';
+import Finalize from 'components/create/form/finalize';
 import StepIndicator from 'components/create/stepIndicator';
 import { TextButton } from 'components/general/buttons';
 import { Column, Row, Title, PlainText, colors } from 'components/general/styledTags';
-import { createConstants } from 'constants/createConstants';
-import { useEffect, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import * as datefns from 'date-fns';
+import { Category, createConstants } from 'constants/createConstants';
+import Dugnad from 'models/dugnad';
+import { useEffect, useRef, useState } from 'react';
+import CategorySelection from 'components/create/form/categorySection';
+import { View } from 'react-native';
+import DugnadService from 'services/dugnadService';
+import StorageService from 'services/storageService';
 import styled from 'styled-components/native';
+import TitleAndDescriptionSelection from 'components/create/form/titleDescriptionSection';
+import PlaceSelection from 'components/create/form/placeSection';
+import DateAndTimeSelection from 'components/create/form/dateTimeSection';
+import PersonsSelection from 'components/create/form/personSection';
+import ImageUpload from 'components/create/form/imageSection';
 
 export default function Create() {
   const [step, setStep] = useState(1);
@@ -14,81 +24,162 @@ export default function Create() {
   // Keeps count of which steps have been marked as "validated"
   const [validSteps, setValidSteps] = useState(0);
 
+  const [category, setCategory] = useState<Category | null>(null);
+
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
+  const [address, setAddress] = useState('');
+  const [postcode, setPostcode] = useState('');
+  const [city, setCity] = useState('');
+
+  const [dateTime, setDateTime] = useState<Date | null>(null);
+  const [duration, setDuration] = useState(0);
+
+  const [people, setPeople] = useState<number>(0);
+
+  const [images, setImages] = useState<string[]>([]);
+
+  // Store previous ref, possibly allowing user to jump between steps later
+  const previousValidStep = useRef(validSteps);
+
+  const submit = async (): Promise<boolean> => {
+    const dugnad: Dugnad = {
+      title: title,
+      description: description,
+      address: address,
+      postcode: postcode,
+      city: city,
+      startDateTime: dateTime!,
+      endDateTime: datefns.addHours(dateTime!, duration),
+      requiredPersons: people,
+      images: [],
+    };
+    for (let i = 0; i < images.length; i++) {
+      const uploaded = await StorageService.uploadImage(images[i]);
+      if (uploaded === 'ERROR') {
+        return false;
+      }
+      dugnad.images.push(uploaded);
+    }
+    return await DugnadService.postDugnad(dugnad);
+  };
+
+  useEffect(() => {
+    if (category) {
+      previousValidStep.current = validSteps;
+      setValidSteps(1);
+    } else {
+      setValidSteps(0);
+    }
+  }, [category]);
+
+  useEffect(() => {
+    if (title !== '' && description !== '') {
+      previousValidStep.current = validSteps;
+      setValidSteps(2);
+    } else {
+      setValidSteps(1);
+    }
+  }, [title, description]);
+
+  useEffect(() => {
+    if (address !== '' && postcode.length === 4, city !== '') {
+      previousValidStep.current = validSteps;
+      setValidSteps(3);
+    } else {
+      setValidSteps(0);
+    }
+  }, [address, postcode, city]);
+
+  useEffect(() => {
+    if (dateTime && !datefns.isToday(dateTime) && datefns.isFuture(dateTime) && duration > 0) {
+      previousValidStep.current = validSteps;
+      setValidSteps(4);
+    } else {
+      setValidSteps(0);
+    }
+  }, [dateTime, duration])
+
+  useEffect(() => {
+    if (people > 0) {
+      previousValidStep.current = validSteps;
+      setValidSteps(7); // Since images (next form) are optional, we skip straight to 7
+    } else {
+      setValidSteps(0);
+    }
+  }, [people]);
+
+  const SectionList = [
+    <CategorySelection selected={category} onCategorySelect={setCategory} />,
+    <TitleAndDescriptionSelection
+      title={title}
+      onChangeTitle={setTitle}
+      description={description}
+      onChangeDescription={setDescription}
+    />,
+    <PlaceSelection
+      address={address}
+      onAddressChange={setAddress}
+      postcode={postcode}
+      onPostcodeChange={setPostcode}
+      setCity={setCity}
+    />,
+    <DateAndTimeSelection
+      setDateTime={setDateTime}
+      duration={duration}
+      setDuration={setDuration}
+    />,
+    <PersonsSelection people={people} onPeopleChange={setPeople} />,
+    <ImageUpload images={images} onImageAdd={setImages} setShowUI={setShowUI} />,
+    <Finalize />
+  ];
+
   return (
     <Main>
       <StepIndicatorColumn>
         <PlainText>Press any of these steps to go back</PlainText>
         <StyledStepIndicator $hidden={!isShowingUI} currentStep={step} setStep={setStep} />
       </StepIndicatorColumn>
-      {step < 7 ? (
-        <>
-          <Column>
-            <SectionTitle $hidden={!isShowingUI}>{createConstants.sections[step - 1].title}</SectionTitle>
-            {/* <Heading className={s.section.description}>{section.description}</Heading> */}
-            <DugnadForm step={step} validSteps={validSteps} setValidSteps={setValidSteps} setShowUI={setShowUI} />
-          </Column>
-          {isShowingUI &&
-            <StepButtons>
-              <ButtonWrapper $show={step >= 2}>
-                <TextButton
-                  color={colors.yellow}
-                  text={"Back"}
-                  iconName="chevron-left"
-                  iconPosition="right"
-                  onTap={() => {
-                    if (step - 1 > 0) {
-                      setStep(step - 1);
-                    }
-                  }}
-                />
-              </ButtonWrapper>
-              <ButtonWrapper $show={step <= 6 && step <= validSteps}>
-                <TextButton
-                  color={colors.yellow}
-                  text={step === 6 ? "Finish" : "Next"}
-                  iconName="chevron-right"
-                  iconPosition="left"
-                  onTap={() => {
-                    // Only allow shift forward if within range, and the step is validated
-                    if (step + 1 <= 7 && step <= validSteps) {
-                      setStep(step + 1);
-                    }
-                  }}
-                />
-              </ButtonWrapper>
-            </StepButtons>
-          }
-
-        </>
-      ) : (
-        <PreviewContainer>
-          <Column>
-            {Array.from<number>({ length: 100 }).map((_, index) => (
-              <PlainText key={index}>Preview goes here</PlainText>
-            ))}
-          </Column>
-          <StepButtons>
+      <Form>
+        <SectionTitle $hidden={!isShowingUI}>{createConstants.sections[step - 1].title}</SectionTitle>
+        {/* <Heading className={s.section.description}>{section.description}</Heading> */}
+        {SectionList[step - 1]}
+      </Form>
+      {isShowingUI &&
+        <StepButtons>
+          <ButtonWrapper $show={step >= 2}>
             <TextButton
               color={colors.yellow}
-              text={"Go Back"}
+              text={"Back"}
               iconName="chevron-left"
               iconPosition="right"
               onTap={() => {
-                setStep(6);
+                if (step - 1 > 0) {
+                  setStep(step - 1);
+                }
               }}
             />
+          </ButtonWrapper>
+          <ButtonWrapper $show={step <= 7 && step <= validSteps}>
             <TextButton
-              color={colors.green}
-              text={"Post"}
-              iconName="plus"
+              color={step === 7 ? colors.green : colors.yellow}
+              text={step === 7 ? "Submit" : "Next"}
+              iconName={step === 7 ? "plus" : "chevron-right"}
               iconPosition="left"
               onTap={() => {
-
+                // Only allow shift forward if within range, and the step is validated
+                if (step + 1 <= 7 && step <= validSteps) {
+                  setStep(step + 1);
+                  return
+                }
+                if (step === 7) {
+                  submit()
+                }
               }}
             />
-          </StepButtons>
-        </PreviewContainer>
-      )
+          </ButtonWrapper>
+        </StepButtons>
       }
     </Main >
   );
@@ -100,11 +191,18 @@ const Main = styled.View({
   backgroundColor: '#e4e3d5',
   padding: 20,
   paddingTop: 40,
-  gap: 20,
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'center',
 });
+
+const Form = styled(Column)({
+  marginTop: 10,
+  marginBottom: 10,
+  flexGrow: 1,
+  alignSelf: 'stretch',
+  gap: 10,
+})
 
 const StepIndicatorColumn = styled(Column)({ gap: 10 })
 
@@ -123,9 +221,4 @@ const ButtonWrapper = styled(View)<{ $show: boolean }>(props => ({
 const StepButtons = styled(Row)({
   alignSelf: 'stretch',
   justifyContent: "space-between",
-})
-
-const PreviewContainer = styled(ScrollView)({
-  flex: 1,
-  alignSelf: 'stretch',
 })

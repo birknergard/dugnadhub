@@ -4,7 +4,7 @@ import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./firebaseEnv";
 import { getFirestore } from "firebase/firestore";
 import { getStorage, ref } from "firebase/storage";
-import { getReactNativePersistence, browserLocalPersistence, initializeAuth } from "firebase/auth";
+import { getReactNativePersistence, browserLocalPersistence, initializeAuth, getAuth } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -13,10 +13,10 @@ import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Authentication
-export const auth = initializeAuth(app, {
+// Authentication, if i dont do it this way android wont work :)
+export const auth = (Platform.OS === 'android') ? initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-});
+}) : getAuth(app)
 
 // Persistent storage
 if (Platform.OS === 'web') {
