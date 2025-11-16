@@ -5,13 +5,10 @@ import { useState } from 'react';
 import { Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import styled from 'styled-components/native';
 
-export default function CategorySelection({ category, onCategorySelect }: {
-  category: string,
-  onCategorySelect: (category: string) => void
+export default function CategorySelection({ selected, onCategorySelect }: {
+  selected: Category | null,
+  onCategorySelect: (category: Category) => void
 }) {
-  const [selected, setSelected] = useState<Category | null>(null)
-  const [isShowingSelected, setShowingSelected] = useState(true);
-
   return (
     <BodyColumn>
       <ListColumn>
@@ -22,9 +19,7 @@ export default function CategorySelection({ category, onCategorySelect }: {
               key={i + 10}
               $selected={selected === category}
               onPress={() => {
-                onCategorySelect(category.name)
-                setSelected(category)
-                setShowingSelected(false)
+                onCategorySelect(category)
               }}
             >
               <Label>{category.name}</Label>
@@ -37,11 +32,8 @@ export default function CategorySelection({ category, onCategorySelect }: {
         }
       </ListColumn>
       {selected &&
-        <Pressable
+        <View
           className={s.selectBox.container + ' ' + s.selectBox.selected}
-          onPress={() => {
-            setShowingSelected(true)
-          }}
         >
           <Row>
             <Heading>{`${selected.name}  `}</Heading>
@@ -51,7 +43,7 @@ export default function CategorySelection({ category, onCategorySelect }: {
             />
           </Row>
           <PlainText>{selected.description}</PlainText>
-        </Pressable>
+        </View>
       }
     </BodyColumn>
   );

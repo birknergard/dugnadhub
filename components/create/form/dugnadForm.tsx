@@ -11,7 +11,7 @@ import { add, addHours, isFuture, isToday } from 'date-fns';
 import FirestoreService from 'services/dugnadService';
 import { Column } from 'components/general/styledTags';
 import StorageService from 'services/storageService';
-import PreviewDugnad from './preview';
+import { Category } from 'constants/createConstants';
 
 export default function DugnadForm({
   step,
@@ -25,7 +25,7 @@ export default function DugnadForm({
   setValidSteps: (step: number) => void
 
 }) {
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState<Category | null>(null);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -68,7 +68,7 @@ export default function DugnadForm({
   };
 
   useEffect(() => {
-    if (category !== '') {
+    if (category) {
       previousValidStep.current = validSteps;
       setValidSteps(1);
     } else {
@@ -113,7 +113,7 @@ export default function DugnadForm({
   }, [people]);
 
   const SectionList = [
-    <CategorySelection category={category} onCategorySelect={setCategory} />,
+    <CategorySelection selected={category} onCategorySelect={setCategory} />,
     <TitleAndDescriptionSelection
       title={title}
       onChangeTitle={setTitle}
