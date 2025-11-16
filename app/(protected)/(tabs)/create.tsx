@@ -19,11 +19,12 @@ import ImageUpload from 'components/create/form/imageSection';
 import { auth, getStorageReference } from 'firebaseConfig';
 import { useAuthSession } from 'providers/authSessionProvider';
 import { router } from 'expo-router';
+import Toast from 'react-native-toast-message';
 
 export default function Create() {
   const [step, setStep] = useState(1);
   const [isShowingUI, setShowUI] = useState(true);
-  const userId = useAuthSession().user?.uid ?? 'unknown user'
+  const userId = useAuthSession().user?.uid ?? 'unknown user';
 
   // Keeps count of which steps have been marked as "validated"
   const [validSteps, setValidSteps] = useState(0);
@@ -47,6 +48,8 @@ export default function Create() {
   // Store previous ref, possibly allowing user to jump between steps later
   const previousValidStep = useRef(validSteps);
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   const submit = async () => {
     const dugnad: Dugnad = {
       title: title,
@@ -65,6 +68,10 @@ export default function Create() {
       // TODO: error logging
       return
     }
+    Toast.show({
+      type: 'success',
+      text1: `Created new dugnad ${title}!`
+    })
     router.navigate('/')
   };
 
@@ -96,7 +103,23 @@ export default function Create() {
   }, [address, postcode, city]);
 
   useEffect(() => {
-    if (dateTime && !datefns.isToday(dateTime) && datefns.isFuture(dateTime) && duration > 0) {
+    if (!dateTime) {
+      return
+    }
+
+    if (datefns.isToday(dateTime)) {
+      setErrorMessage('Invalid date, can\'t be current day');
+      setValidSteps(3);
+      return
+    }
+
+    if (!datefns.isFuture(dateTime)) {
+      setErrorMessage('Invalid date, has to be in the future (not today).');
+      setValidSteps(3);
+      return
+    }
+
+    if (dateTime && duration > 0) {
       previousValidStep.current = validSteps;
       setValidSteps(4);
     } else {
@@ -112,6 +135,15 @@ export default function Create() {
       setValidSteps(4);
     }
   }, [people]);
+
+  useEffect(() => {
+    if (errorMessage !== '') {
+      Toast.show({
+        type: 'error',
+        text1: errorMessage
+      })
+    }
+  }, [errorMessage])
 
   const SectionList = [
     <CategorySelection selected={category} onCategorySelect={setCategory} />,

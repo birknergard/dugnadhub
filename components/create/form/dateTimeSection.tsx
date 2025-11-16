@@ -90,7 +90,7 @@ export default function DateAndTimeSelection({
     );
 
   useEffect(() => {
-    if (isTimeSelected && date) {
+    if (date) {
       setDateTime(date);
     }
   }, [isTimeSelected, date])
