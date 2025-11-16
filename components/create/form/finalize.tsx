@@ -2,7 +2,7 @@ import { TextButton } from "components/general/buttons";
 import { colors, Column, PlainText, Row } from "components/general/styledTags";
 import DugnadForm from "./dugnadForm";
 import { createConstants } from "constants/createConstants";
-import { ScrollView } from "react-native";
+import { ScrollView, Text } from "react-native";
 import styled from "styled-components/native";
 
 export default function Finalize({ }: {}) {
@@ -23,7 +23,7 @@ const PreviewContainer = styled(Column)({
 })
 
 const StyledScrollView = styled(ScrollView)({
-  maxHeight: 620,
+  flex: 1,
   alignSelf: 'stretch'
 })
 

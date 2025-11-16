@@ -5,6 +5,5 @@ export default interface UserInfo {
   email: string,
   username: string,
   volunteerFor: string[], // Dugnad id array
-  organizerFor: string[], // Dugnad id array
   dateCreated: Date,
 }

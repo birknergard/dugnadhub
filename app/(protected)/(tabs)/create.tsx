@@ -16,10 +16,14 @@ import PlaceSelection from 'components/create/form/placeSection';
 import DateAndTimeSelection from 'components/create/form/dateTimeSection';
 import PersonsSelection from 'components/create/form/personSection';
 import ImageUpload from 'components/create/form/imageSection';
+import { auth, getStorageReference } from 'firebaseConfig';
+import { useAuthSession } from 'providers/authSessionProvider';
+import { router } from 'expo-router';
 
 export default function Create() {
   const [step, setStep] = useState(1);
   const [isShowingUI, setShowUI] = useState(true);
+  const userId = useAuthSession().user?.uid ?? 'unknown user'
 
   // Keeps count of which steps have been marked as "validated"
   const [validSteps, setValidSteps] = useState(0);
@@ -43,7 +47,7 @@ export default function Create() {
   // Store previous ref, possibly allowing user to jump between steps later
   const previousValidStep = useRef(validSteps);
 
-  const submit = async (): Promise<boolean> => {
+  const submit = async () => {
     const dugnad: Dugnad = {
       title: title,
       description: description,
@@ -54,15 +58,14 @@ export default function Create() {
       endDateTime: datefns.addHours(dateTime!, duration),
       requiredPersons: people,
       images: [],
+      ownerId: userId // Attach user id from current auth session
     };
-    for (let i = 0; i < images.length; i++) {
-      const uploaded = await StorageService.uploadImage(images[i]);
-      if (uploaded === 'ERROR') {
-        return false;
-      }
-      dugnad.images.push(uploaded);
+    const request = await DugnadService.postDugnad(dugnad);
+    if (!request) {
+      // TODO: error logging
+      return
     }
-    return await DugnadService.postDugnad(dugnad);
+    router.navigate('/')
   };
 
   useEffect(() => {
@@ -88,7 +91,7 @@ export default function Create() {
       previousValidStep.current = validSteps;
       setValidSteps(3);
     } else {
-      setValidSteps(0);
+      setValidSteps(2);
     }
   }, [address, postcode, city]);
 
@@ -97,7 +100,7 @@ export default function Create() {
       previousValidStep.current = validSteps;
       setValidSteps(4);
     } else {
-      setValidSteps(0);
+      setValidSteps(3);
     }
   }, [dateTime, duration])
 
@@ -106,7 +109,7 @@ export default function Create() {
       previousValidStep.current = validSteps;
       setValidSteps(7); // Since images (next form) are optional, we skip straight to 7
     } else {
-      setValidSteps(0);
+      setValidSteps(4);
     }
   }, [people]);
 
@@ -167,14 +170,14 @@ export default function Create() {
               text={step === 7 ? "Submit" : "Next"}
               iconName={step === 7 ? "plus" : "chevron-right"}
               iconPosition="left"
-              onTap={() => {
+              onTap={async () => {
                 // Only allow shift forward if within range, and the step is validated
                 if (step + 1 <= 7 && step <= validSteps) {
                   setStep(step + 1);
                   return
                 }
                 if (step === 7) {
-                  submit()
+                  await submit()
                 }
               }}
             />

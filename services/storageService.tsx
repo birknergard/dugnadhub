@@ -4,20 +4,16 @@ import { getStorageReference } from 'firebaseConfig';
 const StorageService = (() => {
   const getImage = async () => { };
 
-  const uploadImage = async (uri: string): Promise<string> => {
+  const uploadDugnadImage = async (imageName: string, uri: string, dugnadId: string): Promise<string> => {
     const fetchResponse = await fetch(uri);
     const blob = await fetchResponse.blob();
 
-    const imageName = uri.split('/').pop()?.split('.')[0] ?? 'anonymtBilde';
-    console.log('imageName', imageName);
-
-    const uploadPath = `images/${imageName}`;
-
+    const uploadPath = `dugnadImageFiles/${imageName}`;
     const imageRef = getStorageReference(uploadPath);
 
     try {
       await uploadBytes(imageRef, blob);
-      console.log('Uploading image to', uploadPath);
+      //console.log('Uploading image to', uploadPath);
       const downloadURL = await getDownloadURL(imageRef);
       console.log('Download URL:', downloadURL);
       return downloadURL;
@@ -29,7 +25,7 @@ const StorageService = (() => {
 
   return {
     getImage,
-    uploadImage,
+    uploadDugnadImage,
   };
 })();
 

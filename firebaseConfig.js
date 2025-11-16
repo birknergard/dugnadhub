@@ -2,7 +2,7 @@ import { Platform } from "react-native";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./firebaseEnv";
-import { getFirestore } from "firebase/firestore";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { getStorage, ref } from "firebase/storage";
 import { getReactNativePersistence, browserLocalPersistence, initializeAuth, getAuth } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,7 +16,7 @@ const app = initializeApp(firebaseConfig);
 // Authentication, if i dont do it this way android wont work :)
 export const auth = (Platform.OS === 'android') ? initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-}) : getAuth(app)
+}) : getAuth(app);
 
 // Persistent storage
 if (Platform.OS === 'web') {
