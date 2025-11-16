@@ -6,18 +6,27 @@ import StorageService from './storageService';
 const DugnadService = (() => {
 
   const getDugnader = async (): Promise<Dugnad[]> => {
-    const response = await getDocs(collection(db, 'dugnad'))
-    console.log(response.empty)
-    return response.docs.map(doc => {
-      return doc.data() as Dugnad;
-    });
+    return await getDocs(collection(db, 'dugnad'))
+      .then(r => r.docs.map(doc => {
+        return doc.data() as Dugnad;
+      }))
+      .catch(e => {
+        console.error('Could not fetch dugnads from cloud: ', e);
+        return [];
+      })
   };
 
   const getDugnadById = async (dugnadId: string): Promise<Dugnad | null> => {
     const ref = doc(db, 'dugnad', dugnadId);
-    const response = await getDoc(ref)
-    if (!response.data()) return null;
-    return { ...response.data() } as Dugnad;
+    return await getDoc(ref)
+      .then(r => {
+        if (!r.data()) return null;
+        return { ...r.data() } as Dugnad;
+      })
+      .catch(e => {
+        console.error(`Could not fetch dugnad from cloud on id ${dugnadId} : ${e}`);
+        return null;
+      })
   };
 
   const postDugnad = async (
@@ -29,7 +38,11 @@ const DugnadService = (() => {
 
     // Uploads images
     for (let i = 0; i < dugnad.images.length; i++) {
-      const uploaded = await StorageService.uploadDugnadImage(`image-dugnad-${dugnadId}-${i}`, dugnad.images[i], dugnadId);
+      const uploaded = await StorageService.uploadDugnadImage(
+        `image-dugnad-${dugnadId}-${i}`,
+        dugnad.images[i],
+        dugnadId
+      );
       if (uploaded === 'ERROR') {
         return false;
       }

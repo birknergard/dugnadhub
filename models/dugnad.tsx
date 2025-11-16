@@ -1,5 +1,6 @@
 export default interface Dugnad {
   id?: string;
+  category?: string,
   ownerId: string,
   title: string;
   description: string;
