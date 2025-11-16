@@ -124,6 +124,7 @@ export default function Create() {
       setValidSteps(4);
     } else {
       setValidSteps(3);
+      return
     }
   }, [dateTime, duration])
 
