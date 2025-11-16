@@ -10,12 +10,9 @@ import styled from 'styled-components/native';
 export default function Create() {
   const [step, setStep] = useState(1);
   const [isShowingUI, setShowUI] = useState(true);
-  const [validSteps, setValidSteps] = useState(0);
 
   // Keeps count of which steps have been marked as "validated"
-  useEffect(() => {
-    console.log('validsteps changed: ', validSteps);
-  }, [validSteps])
+  const [validSteps, setValidSteps] = useState(0);
 
   return (
     <Main>

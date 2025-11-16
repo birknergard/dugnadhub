@@ -71,6 +71,8 @@ export default function DugnadForm({
     if (category !== '') {
       previousValidStep.current = validSteps;
       setValidSteps(1);
+    } else {
+      setValidSteps(0);
     }
   }, [category]);
 
@@ -78,6 +80,8 @@ export default function DugnadForm({
     if (title !== '' && description !== '') {
       previousValidStep.current = validSteps;
       setValidSteps(2);
+    } else {
+      setValidSteps(1);
     }
   }, [title, description]);
 
@@ -85,14 +89,17 @@ export default function DugnadForm({
     if (address !== '' && postcode.length === 4, city !== '') {
       previousValidStep.current = validSteps;
       setValidSteps(3);
+    } else {
+      setValidSteps(0);
     }
   }, [address, postcode, city]);
 
   useEffect(() => {
-    console.log(dateTime, dateTime != null, !isToday(dateTime!), isFuture(dateTime!), duration > 0);
     if (dateTime && !isToday(dateTime) && isFuture(dateTime) && duration > 0) {
       previousValidStep.current = validSteps;
       setValidSteps(4);
+    } else {
+      setValidSteps(0);
     }
   }, [dateTime, duration])
 
@@ -100,6 +107,8 @@ export default function DugnadForm({
     if (people > 0) {
       previousValidStep.current = validSteps;
       setValidSteps(7); // Since images (next form) are optional, we skip straight to 7
+    } else {
+      setValidSteps(0);
     }
   }, [people]);
 
