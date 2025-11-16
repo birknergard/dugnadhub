@@ -8,7 +8,7 @@ import styled from 'styled-components/native';
 import { colors, Column, Input, Label, PlainText, Row } from 'components/general/styledTags';
 import 'react-datepicker/dist/react-datepicker.css';
 import NumberInput from 'components/general/numberInput';
-import { format, isFuture, isToday, set } from 'date-fns';
+import { format } from 'date-fns';
 
 export default function DateAndTimeSelection({
   setDateTime, duration, setDuration
@@ -18,7 +18,6 @@ export default function DateAndTimeSelection({
   setDuration: (number: number) => void;
 }) {
   const [date, setDate] = useState<Date | null>(null);
-  const [isTimeSelected, setTimeSelected] = useState(false);
 
   const [isShowingAndroidDatePicker, setShowAndroidDatePicker] = useState(false);
   const [isShowingAndroidTimePicker, setShowAndroidTimePicker] = useState(false);
@@ -40,7 +39,6 @@ export default function DateAndTimeSelection({
   const handleAndroidTimeChange = (event: DateTimePickerEvent, selectedTime?: Date) => {
     if (event.type === 'set' && selectedTime) {
       setDate(selectedTime);
-      setTimeSelected(true);
     }
     setShowAndroidTimePicker(false);
   };
@@ -72,9 +70,7 @@ export default function DateAndTimeSelection({
         selected={date}
         dateFormat={'p'}
         onChange={(e) => {
-          console.log("hello");
           setDate(e)
-          setTimeSelected(true);
         }}
         timeIntervals={15} // minute intervals
       />
@@ -93,7 +89,7 @@ export default function DateAndTimeSelection({
     if (date) {
       setDateTime(date);
     }
-  }, [isTimeSelected, date])
+  }, [date])
 
   return (
     <StyledColumn>
