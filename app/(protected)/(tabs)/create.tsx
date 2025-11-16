@@ -1,16 +1,21 @@
 import DugnadForm from 'components/create/form/dugnadForm';
-import PreviewDugnad from 'components/create/form/preview';
 import StepIndicator from 'components/create/stepIndicator';
 import { TextButton } from 'components/general/buttons';
-import { Column, Row, Title, PlainText, RowPressable } from 'components/general/styledTags';
+import { Column, Row, Title, PlainText, colors } from 'components/general/styledTags';
 import { createConstants } from 'constants/createConstants';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import styled from 'styled-components/native';
 
 export default function Create() {
   const [step, setStep] = useState(1);
   const [isShowingUI, setShowUI] = useState(true);
+  const [validSteps, setValidSteps] = useState(0);
+
+  // Keeps count of which steps have been marked as "validated"
+  useEffect(() => {
+    console.log('validsteps changed: ', validSteps);
+  }, [validSteps])
 
   return (
     <Main>
@@ -23,12 +28,13 @@ export default function Create() {
           <Column>
             <SectionTitle $hidden={!isShowingUI}>{createConstants.sections[step - 1].title}</SectionTitle>
             {/* <Heading className={s.section.description}>{section.description}</Heading> */}
-            <DugnadForm step={step} setShowUI={setShowUI} />
+            <DugnadForm step={step} validSteps={validSteps} setValidSteps={setValidSteps} setShowUI={setShowUI} />
           </Column>
           {isShowingUI &&
             <StepButtons>
               <ButtonWrapper $show={step >= 2}>
                 <TextButton
+                  color={colors.yellow}
                   text={"Back"}
                   iconName="chevron-left"
                   iconPosition="right"
@@ -39,13 +45,15 @@ export default function Create() {
                   }}
                 />
               </ButtonWrapper>
-              <ButtonWrapper $show={step <= 6}>
+              <ButtonWrapper $show={step <= 6 && step <= validSteps}>
                 <TextButton
+                  color={colors.yellow}
                   text={step === 6 ? "Finish" : "Next"}
                   iconName="chevron-right"
                   iconPosition="left"
                   onTap={() => {
-                    if (step + 1 <= 7) {
+                    // Only allow shift forward if within range, and the step is validated
+                    if (step + 1 <= 7 && step <= validSteps) {
                       setStep(step + 1);
                     }
                   }}
@@ -64,6 +72,7 @@ export default function Create() {
           </Column>
           <StepButtons>
             <TextButton
+              color={colors.yellow}
               text={"Go Back"}
               iconName="chevron-left"
               iconPosition="right"
@@ -72,6 +81,7 @@ export default function Create() {
               }}
             />
             <TextButton
+              color={colors.green}
               text={"Post"}
               iconName="plus"
               iconPosition="left"
@@ -110,7 +120,7 @@ const SectionTitle = styled(Title)<{ $hidden: boolean }>(props => ({
 }))
 
 const ButtonWrapper = styled(View)<{ $show: boolean }>(props => ({
-  visibility: props.$show ? 'visible' : 'hidden',
+  display: props.$show ? 'block' : 'none',
 }))
 
 const StepButtons = styled(Row)({

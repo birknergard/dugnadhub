@@ -25,16 +25,16 @@ export function TextButton({ text, iconName, onTap, iconPosition, color }) {
   );
 }
 
-const StyledButton = styled.Pressable < { $color } > `
-  background-color: ${props => props.$color};
-  padding: 10px;
-  border-radius: 10px;
-  flex-direction: row;
-  gap: 10px;
-  justify-self: stretch;
-  justify-content: center;
-  align-items: center;
-`
+const StyledButton = styled.Pressable(props => ({
+  backgroundColor: props.$color ?? colors.yellow,
+  padding: 10,
+  borderRadius: 10,
+  flexDirection: 'row',
+  gap: 10,
+  justifySelf: "stretch",
+  justifySontent: "center",
+  alignItems: "center",
+}))
 
 const ButtonLabel = styled(Label)({
   fontSize: 22,

@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 import TitleAndDescriptionSelection from './sections/titleDescriptionSection';
 import CategorySelection from './sections/categorySection';
 import PlaceSelection from './sections/placeSection';
@@ -7,7 +7,7 @@ import DateAndTimeSelection from './sections/dateTimeSection';
 import PersonsSelection from './sections/personSection';
 import ImageUpload from './sections/imageSection';
 import Dugnad from 'models/dugnad';
-import { addHours } from 'date-fns';
+import { add, addHours, isFuture, isToday } from 'date-fns';
 import FirestoreService from 'services/dugnadService';
 import { Column } from 'components/general/styledTags';
 import StorageService from 'services/storageService';
@@ -16,19 +16,33 @@ import PreviewDugnad from './preview';
 export default function DugnadForm({
   step,
   setShowUI,
+  validSteps,
+  setValidSteps,
 }: {
   step: number;
   setShowUI: (bool: boolean) => void;
+  validSteps: number;
+  setValidSteps: (step: number) => void
+
 }) {
+  const [category, setCategory] = useState('');
+
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<string>('');
   const [description, setDescription] = useState('');
+
   const [address, setAddress] = useState('');
   const [postcode, setPostcode] = useState('');
-  const [dateTime, setDateTime] = useState<Date>(new Date());
+  const [city, setCity] = useState('');
+
+  const [dateTime, setDateTime] = useState<Date | null>(null);
   const [duration, setDuration] = useState(0);
+
   const [people, setPeople] = useState<number>(0);
+
   const [images, setImages] = useState<string[]>([]);
+
+  // Store previous ref, possibly allowing user to jump between steps later
+  const previousValidStep = useRef(validSteps);
 
   // TODO: Submit completed doc
   const submit = async (): Promise<boolean> => {
@@ -37,9 +51,9 @@ export default function DugnadForm({
       description: description,
       address: address,
       postcode: postcode,
-      city: 'unknown',
-      startDateTime: dateTime,
-      endDateTime: addHours(dateTime, duration),
+      city: city,
+      startDateTime: dateTime!,
+      endDateTime: addHours(dateTime!, duration),
       requiredPersons: people,
       images: [],
     };
@@ -52,6 +66,42 @@ export default function DugnadForm({
     }
     return await FirestoreService.postDugnad(dugnad);
   };
+
+  useEffect(() => {
+    if (category !== '') {
+      previousValidStep.current = validSteps;
+      setValidSteps(1);
+    }
+  }, [category]);
+
+  useEffect(() => {
+    if (title !== '' && description !== '') {
+      previousValidStep.current = validSteps;
+      setValidSteps(2);
+    }
+  }, [title, description]);
+
+  useEffect(() => {
+    if (address !== '' && postcode.length === 4, city !== '') {
+      previousValidStep.current = validSteps;
+      setValidSteps(3);
+    }
+  }, [address, postcode, city]);
+
+  useEffect(() => {
+    console.log(dateTime, dateTime != null, !isToday(dateTime!), isFuture(dateTime!), duration > 0);
+    if (dateTime && !isToday(dateTime) && isFuture(dateTime) && duration > 0) {
+      previousValidStep.current = validSteps;
+      setValidSteps(4);
+    }
+  }, [dateTime, duration])
+
+  useEffect(() => {
+    if (people > 0) {
+      previousValidStep.current = validSteps;
+      setValidSteps(7); // Since images (next form) are optional, we skip straight to 7
+    }
+  }, [people]);
 
   const SectionList = [
     <CategorySelection category={category} onCategorySelect={setCategory} />,
@@ -66,9 +116,9 @@ export default function DugnadForm({
       onAddressChange={setAddress}
       postcode={postcode}
       onPostcodeChange={setPostcode}
+      setCity={setCity}
     />,
     <DateAndTimeSelection
-      dateTime={dateTime}
       setDateTime={setDateTime}
       duration={duration}
       setDuration={setDuration}

@@ -4,17 +4,24 @@ import styled from "styled-components/native";
 import { useQuery } from "@tanstack/react-query";
 import GeocodingService from "services/geocodingService";
 
-export default function PlaceSelection({ address, onAddressChange, postcode, onPostcodeChange }: {
+export default function PlaceSelection({ address, onAddressChange, postcode, onPostcodeChange, setCity }: {
   address: string,
   onAddressChange: (address: string) => void,
   postcode: string,
   onPostcodeChange: (postcode: string) => void
+  setCity: (city: string) => void
 }) {
 
   // Using tanstack@query for seamless refetch logic and clean code
   const { data: city } = useQuery({
-    queryKey: ['cityByPostCode', postcode],
-    queryFn: () => postcode.length === 4 ? GeocodingService.getCityByPostcode(postcode) : null
+    queryKey: ['cityByPostCode', postcode, setCity],
+    queryFn: () => postcode.length === 4 ? GeocodingService.getCityByPostcode(postcode)
+      .then(city => {
+        if (city) {
+          setCity(city);
+          return city;
+        }
+      }) : null
   })
 
   return (

@@ -1,55 +1,46 @@
-import { FontAwesome6 } from '@expo/vector-icons';
-import { categoryConstants, Category } from 'constants/createConstants';
-import { useState } from 'react';
-import { Platform, Pressable, Text, TextInput, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Platform, View } from 'react-native';
 import DatePicker from 'react-datepicker';
 import RNDateTimePicker, {
-  DateTimePickerAndroid,
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import styled from 'styled-components/native';
 import { colors, Column, Input, Label, PlainText, Row } from 'components/general/styledTags';
 import 'react-datepicker/dist/react-datepicker.css';
 import NumberInput from 'components/general/numberInput';
-import { TextButton } from 'components/general/buttons';
-import { format } from 'date-fns';
+import { format, isFuture, isToday, set } from 'date-fns';
 
 export default function DateAndTimeSelection({
-  dateTime,
-  setDateTime,
+  setDateTime, duration, setDuration
 }: {
-  dateTime: Date;
   setDateTime: (date: Date) => void;
   duration: number;
   setDuration: (number: number) => void;
 }) {
-  const onChange = (event: DateTimePickerEvent, selectedDate?: Date | undefined | void) => {
-    const currentDate = selectedDate || dateTime;
-    setDateTime(currentDate);
-  };
-
-  const [time, setStartTime] = useState<Date>(new Date());
-  const [duration, setDuration] = useState<number>(0);
+  const [date, setDate] = useState<Date | null>(null);
+  const [isTimeSelected, setTimeSelected] = useState(false);
 
   const [isShowingAndroidDatePicker, setShowAndroidDatePicker] = useState(false);
   const [isShowingAndroidTimePicker, setShowAndroidTimePicker] = useState(false);
 
   const handleDurationChange = (duration: number) => {
-    if (1 <= duration && duration <= 8) {
+    console.log(duration);
+    if (0 < duration && duration <= 8) {
       setDuration(duration);
     }
   };
 
   const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (event.type === 'set' && selectedDate) {
-      setDateTime(selectedDate);
+      setDate(selectedDate);
     }
     setShowAndroidDatePicker(false);
   };
 
   const handleTimeChange = (event: DateTimePickerEvent, selectedTime?: Date) => {
     if (event.type === 'set' && selectedTime) {
-      setStartTime(selectedTime);
+      setDate(selectedTime);
+      setTimeSelected(true);
     }
     setShowAndroidTimePicker(false);
   };
@@ -58,18 +49,19 @@ export default function DateAndTimeSelection({
     Platform.OS === 'web' ? (
       <StyledDatePicker
         className="text-start"
-        selected={dateTime}
-        onChange={(e) => setDateTime(e!)}
+        selected={date}
+        onSelect={(e) => setDate(e)}
         dateFormat={'P'}
+        startDate={new Date()}
         timeIntervals={15}
       />
     ) : (
       <Column>
         <AndroidPicker onPress={() => setShowAndroidDatePicker(true)}>
-          {format(dateTime, 'dd/MM/yyyy')}
+          {date ? format(date, 'dd/MM/yyyy') : 'Not selected'}
         </AndroidPicker>
         {isShowingAndroidDatePicker && (
-          <RNDateTimePicker mode="date" value={dateTime} onChange={handleDateChange} />
+          <RNDateTimePicker mode="date" value={date ?? new Date()} onChange={handleDateChange} />
         )}
       </Column>
     );
@@ -80,21 +72,32 @@ export default function DateAndTimeSelection({
         className="text-start"
         showTimeSelect
         showTimeSelectOnly
-        selected={time}
+        selected={date}
         dateFormat={'p'}
-        onChange={(e) => setStartTime(e!)}
+        onSelect={(e) => {
+          setDate(e)
+          setTimeSelected(true);
+        }}
         timeIntervals={15} // minute intervals
       />
     ) : (
       <Column>
         <AndroidPicker onPress={() => setShowAndroidTimePicker(true)}>
-          {format(time, 'HH:mm')}
+          {date ? format(date, 'HH:mm') : 'Select a time'}
         </AndroidPicker>
         {isShowingAndroidTimePicker && (
-          <RNDateTimePicker mode="time" value={time} onChange={handleTimeChange} />
+          <RNDateTimePicker mode="time" value={date ?? new Date()} onChange={handleTimeChange} />
         )}
       </Column>
     );
+
+  useEffect(() => {
+    console.log(isTimeSelected, date ? format(date, "HH:mm dd/MM/yyyy") : '');
+    if (isTimeSelected && date) {
+      setDateTime(date);
+    }
+  }, [isTimeSelected, date])
+
   return (
     <StyledColumn>
       <Column>
