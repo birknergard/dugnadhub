@@ -26,7 +26,6 @@ export default function TabLayout() {
           tabBarLabelPosition: 'below-icon'
         }}
       />
-      {/*
       <Tabs.Screen
         name="profile"
         options={{
@@ -37,7 +36,6 @@ export default function TabLayout() {
           tabBarLabelPosition: 'below-icon'
         }}
       />
-      */}
     </Tabs>
   );
 }

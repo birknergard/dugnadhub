@@ -1,3 +1,4 @@
+import { Spinner } from 'components/general/spinner';
 import { Stack, Redirect } from 'expo-router';
 import { useAuthSession } from "providers/authSessionProvider";
 import { Text, View } from 'react-native';
@@ -15,7 +16,8 @@ export default function ProtectedLayout() {
           alignItems: "center",
         }}
       >
-        <Text>Henter bruker...</Text>
+        <Text>Henter bruker</Text>
+        <Spinner />
       </View>
     );
   }

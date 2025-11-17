@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import DugnadItem from 'components/browse/dugnadItem';
 import { TextButton } from 'components/general/buttons';
+import { Spinner } from 'components/general/spinner';
+import { Column, PlainText } from 'components/general/styledTags';
 import Dugnad from 'models/dugnad';
-import { FlatList, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import DugnadService from 'services/dugnadService';
 import styled from 'styled-components/native';
@@ -24,6 +26,15 @@ export default function Home() {
         })
     }
   })
+
+  if (isLoading) return (
+    <Main>
+      <Column>
+        <PlainText>Loading ...</PlainText>
+        <Spinner />
+      </Column>
+    </Main>
+  )
 
   return (
     <Main>
