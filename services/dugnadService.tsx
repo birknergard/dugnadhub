@@ -1,5 +1,5 @@
 import Dugnad from 'models/dugnad';
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from 'firebaseConfig';
 import StorageService from './storageService';
 
@@ -64,10 +64,42 @@ const DugnadService = (() => {
       });
   }
 
+  const registerVolunteerOnDugnad = async (userId: string, dugnadId: string): Promise<boolean> => {
+    const ref = doc(collection(db, 'dugnad'), dugnadId)
+    return await updateDoc(ref, {
+      signedUp: arrayUnion(userId)
+    })
+      .then((r) => {
+        console.info(`Added volunteer ${userId} to dugnad with id: ${r}`)
+        return true;
+      })
+      .catch((e) => {
+        console.error('Dugnad API error: ', e);
+        return false;
+      });
+  }
+
+  const removeVolunteerFromDugnad = async (userId: string, dugnadId: string): Promise<boolean> => {
+    const ref = doc(collection(db, 'dugnad'), dugnadId)
+    return await updateDoc(ref, {
+      signedUp: arrayRemove(userId)
+    })
+      .then((r) => {
+        console.info(`Added volunteer ${userId} to dugnad with id: ${r}`)
+        return true;
+      })
+      .catch((e) => {
+        console.error('Dugnad API error: ', e);
+        return false;
+      });
+  }
+
   return {
     getDugnader,
     getDugnadById,
     postDugnad,
+    registerVolunteerOnDugnad,
+    removeVolunteerFromDugnad
   };
 })();
 

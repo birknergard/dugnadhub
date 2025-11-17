@@ -5,22 +5,53 @@ import { colors, Column, Heading, Label, PlainText, Row, Title } from 'component
 import { format } from 'date-fns';
 import { useLocalSearchParams, useSearchParams } from 'expo-router/build/hooks';
 import Dugnad from 'models/dugnad';
+import { useAuthSession } from 'providers/authSessionProvider';
 import { useState } from 'react';
-import { Image, ScrollView } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 import DugnadService from 'services/dugnadService';
 import styled from 'styled-components/native';
 
 export default function DugnadDetails({ }: {}) {
   const { id } = useLocalSearchParams();
   const [currentImage, setCurrentImage] = useState(0);
+  const userId = useAuthSession().user!.uid;
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const { data: dugnad, isLoading } = useQuery({
+  const { data: dugnad, isLoading, refetch } = useQuery({
     queryKey: ['dugnadDetails', id],
     queryFn: async (): Promise<Dugnad | null> => {
       console.log(id);
       return id ? await DugnadService.getDugnadById(id as string) : null
-    }
+    },
   })
+
+  const withdraw = async () => {
+    await DugnadService.removeVolunteerFromDugnad(userId, dugnad!.id!)
+      .then(r => {
+        if (r) {
+          Toast.show({
+            type: 'success',
+            text1: `You withdrew from ${dugnad!.title}`
+          })
+        }
+        setErrorMessage(`Error: could not remove registration for ${dugnad!.title}`);
+      });
+    refetch();
+  }
+  const volunteer = async () => {
+    await DugnadService.registerVolunteerOnDugnad(userId, dugnad!.id!)
+      .then(r => {
+        if (r) {
+          Toast.show({
+            type: 'success',
+            text1: `You volunteered for ${dugnad!.title}`
+          })
+        }
+        setErrorMessage(`Error: could not volunteer for ${dugnad!.title}`);
+      });
+    refetch();
+  }
 
   if (isLoading) return (
     <Main>
@@ -33,7 +64,7 @@ export default function DugnadDetails({ }: {}) {
       {!dugnad ? (
         <Label>Could not find dugnad</Label>
       ) : (
-        <ScrollView style={{ flex: 1, alignSelf: 'stretch' }}>
+        <ScrollView style={{ flex: 1, alignSelf: 'stretch', padding: 20 }}>
           <Body>
             <Header>
               <Title>{dugnad.title}</Title>
@@ -49,26 +80,33 @@ export default function DugnadDetails({ }: {}) {
                   <StyledImage source={{ uri: dugnad.images[currentImage] }} resizeMode='cover' />
                 }
               </ImageSection>
-              <ImageButtons>
-                <TextButton
-                  color={colors.beige}
-                  text='Prev'
-                  iconName='caret-left'
-                  iconPosition='right'
-                  onTap={() => {
-                    setCurrentImage(currentImage - 1)
-                  }}
-                />
-                <TextButton
-                  color={colors.beige}
-                  text='Next'
-                  iconName='caret-right'
-                  iconPosition='left'
-                  onTap={() => {
-                    setCurrentImage(currentImage + 1)
-                  }}
-                />
-              </ImageButtons>
+              {dugnad.images.length > 0 &&
+                <ImageButtons>
+                  {(0 < currentImage && currentImage <= dugnad.images.length - 1) &&
+                    <TextButton
+                      color={colors.beige}
+                      text='Prev'
+                      iconName='caret-left'
+                      iconPosition='right'
+                      onTap={() => {
+                        setCurrentImage(currentImage - 1)
+                      }}
+                    />
+                  }
+                  <View></View>
+                  {(0 <= currentImage && currentImage < dugnad.images.length - 1) &&
+                    <TextButton
+                      color={colors.beige}
+                      text='Next'
+                      iconName='caret-right'
+                      iconPosition='left'
+                      onTap={() => {
+                        setCurrentImage(currentImage + 1)
+                      }}
+                    />
+                  }
+                </ImageButtons>
+              }
 
             </Column>
             <Section>
@@ -95,17 +133,32 @@ export default function DugnadDetails({ }: {}) {
               <Title>{`${dugnad.signedUp.length} of ${dugnad.requiredPersons}`}</Title>
             </Section>
 
-            <VolunteerButton
-              text='Volunteer for this Dugnad'
-              iconName=''
-              iconPosition=''
-              color={colors.green}
-              onTap={() => { }}
-            />
+            {dugnad.signedUp.includes(userId) ? (
+              <TextButton
+                text='Withdraw from event'
+                iconName=''
+                iconPosition=''
+                color={colors.red}
+                onTap={async () => {
+                  await withdraw();
+                }}
+              />
+            ) : (
+              <TextButton
+                text='Volunteer for this Dugnad'
+                iconName=''
+                iconPosition=''
+                color={colors.green}
+                onTap={async () => {
+                  await volunteer();
+                }}
+              />
+            )}
           </Body>
         </ScrollView>
-      )}
-    </Main>
+      )
+      }
+    </Main >
   );
 }
 
@@ -113,7 +166,6 @@ const Main = styled.View({
   flex: 1,
   alignSelf: 'stretch',
   backgroundColor: colors.bg,
-  padding: 20,
   paddingTop: 20,
   gap: 20,
   flexDirection: 'column',
