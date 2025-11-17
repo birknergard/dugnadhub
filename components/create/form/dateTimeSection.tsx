@@ -72,6 +72,7 @@ export default function DateAndTimeSelection({
         onChange={(e) => {
           setDate(e)
         }}
+        timeFormat="HH:mm"
         timeIntervals={15} // minute intervals
       />
     ) : (

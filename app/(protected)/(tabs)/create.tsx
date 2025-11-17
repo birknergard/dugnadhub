@@ -20,6 +20,7 @@ import { auth, getStorageReference } from 'firebaseConfig';
 import { useAuthSession } from 'providers/authSessionProvider';
 import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
+import { Timestamp } from 'firebase/firestore';
 
 export default function Create() {
   const [step, setStep] = useState(1);
@@ -53,20 +54,21 @@ export default function Create() {
   const submit = async () => {
     const dugnad: Dugnad = {
       title: title,
+      category: category!.name,
       description: description,
       address: address,
       postcode: postcode,
       city: city,
-      startDateTime: dateTime!,
-      endDateTime: datefns.addHours(dateTime!, duration),
+      startDateTime: Timestamp.fromDate(dateTime!),
+      endDateTime: Timestamp.fromDate(datefns.addHours(dateTime!, duration)),
+      signedUp: [],
       requiredPersons: people,
       images: [],
       ownerId: userId // Attach user id from current auth session
     };
-    const request = await DugnadService.postDugnad(dugnad);
+    const request = await DugnadService.postDugnad(dugnad, images);
     if (!request) {
-      // TODO: error logging
-      return
+      return setErrorMessage('Could not submit dugnad.')
     }
     Toast.show({
       type: 'success',

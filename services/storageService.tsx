@@ -4,7 +4,7 @@ import { getStorageReference } from 'firebaseConfig';
 const StorageService = (() => {
   const getImage = async () => { };
 
-  const uploadDugnadImage = async (imageName: string, uri: string, dugnadId: string): Promise<string> => {
+  const uploadDugnadImage = async (imageName: string, uri: string): Promise<string> => {
     const fetchResponse = await fetch(uri);
     const blob = await fetchResponse.blob();
 

@@ -8,16 +8,16 @@ export default function DugnadItem({ dugnad }: { dugnad: Dugnad }) {
   const router = useRouter()
 
   return (
-    <ColumnPressable onPress={() => {
+    <Body onPress={() => {
       router.navigate({
         pathname: '/dugnadDetails/[id]',
-        params: { id: dugnad.id! }
+        params: { id: dugnad.id }
       })
     }}>
       <Label>{dugnad.title}</Label>
-      <Label>{format(dugnad.startDateTime, 'dd:MM:yyyy HH:mm')}</Label>
+      <Label>{format(dugnad.startDateTime.toDate(), 'dd/MM/yyyy HH:mm')}</Label>
       <Label>{dugnad.requiredPersons}</Label>
-    </ColumnPressable>
+    </Body>
   );
 }
 

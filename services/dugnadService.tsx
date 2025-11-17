@@ -31,26 +31,29 @@ const DugnadService = (() => {
 
   const postDugnad = async (
     dugnad: Dugnad,
+    images: string[]
   ): Promise<boolean> => {
+
+    // Create copy to work on
+    let parsed = { ...dugnad };
 
     // Gets a unique id and creates a doc on that id
     const dugnadId = doc(collection(db, 'dugnad')).id;
 
     // Uploads images
-    for (let i = 0; i < dugnad.images.length; i++) {
+    for (let i = 0; i < images.length; i++) {
       const uploaded = await StorageService.uploadDugnadImage(
         `image-dugnad-${dugnadId}-${i}`,
-        dugnad.images[i],
-        dugnadId
+        images[i]
       );
       if (uploaded === 'ERROR') {
         return false;
       }
-      dugnad.images.push(uploaded);
+      parsed.images.push(uploaded);
     }
 
     // Uploads the rest of the data
-    return await setDoc(doc(db, 'dugnad', dugnadId), { ...dugnad, id: dugnadId })
+    return await setDoc(doc(db, 'dugnad', dugnadId), { ...parsed, id: dugnadId })
       .then((r) => {
         console.info("Posted dugnad with id: ", { r })
         return true;
