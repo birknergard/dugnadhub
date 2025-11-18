@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import DugnadItem from 'components/browse/dugnadItem';
 import { TextButton } from 'components/general/buttons';
 import { Spinner } from 'components/general/spinner';
-import { Column, PlainText } from 'components/general/styledTags';
+import { Column, Input, PlainText, SmallTitle, Title } from 'components/general/styledTags';
 import { useFocusEffect } from 'expo-router';
 import Dugnad from 'models/dugnad';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import DugnadService from 'services/dugnadService';
@@ -36,6 +36,9 @@ export default function Home() {
     }, [])
   );
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [displayList, setDisplayList] = useState<Dugnad[]>([]);
+
   if (isLoading) return (
     <Load>
       <PlainText>Loading ...</PlainText>
@@ -43,14 +46,38 @@ export default function Home() {
     </Load>
   );
 
+  const getFilteredList = (source: Dugnad[], searchQuery: string): Dugnad[] => {
+    return source.filter(dugnad => {
+      return dugnad.title.toLowerCase().includes(searchQuery.toLowerCase());
+    });
+  }
+
+  useEffect(() => {
+    if (!dugnads) return;
+
+    if (searchQuery === '') {
+      setDisplayList([...dugnads])
+    } else {
+      setDisplayList(getFilteredList(dugnads, searchQuery));
+    }
+  }, [dugnads, searchQuery])
+
   return (
     <Main>
       <FlatList
-        data={dugnads}
+        data={displayList}
         renderItem={dugnad => <DugnadItem dugnad={dugnad.item} />}
         keyExtractor={item => item.id!}
         contentContainerStyle={{ gap: 20 }}
+        style={{ marginTop: 30 }}
       />
+      <SearchField>
+        <SearchInput
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholder='Search by title ...'
+        />
+      </SearchField>
     </Main>
   );
 }
@@ -63,6 +90,8 @@ const Main = styled.View({
   flex: 1,
   backgroundColor: '#e4e3d5',
   padding: 20,
+  paddingBottom: 50,
+  gap: 30,
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'stretch'
@@ -70,4 +99,13 @@ const Main = styled.View({
 
 const DugnadList = styled(FlatList)({
   gap: 10,
+})
+
+const SearchField = styled(Column)({
+  alignItems: 'flex-start'
+})
+
+const SearchInput = styled(Input)({
+  padding: 10,
+  fontSize: 20
 })

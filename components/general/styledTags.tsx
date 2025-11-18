@@ -48,8 +48,8 @@ export const RowPressable = styled.Pressable({
 
 export const Input = styled.TextInput({
   fontFamily: 'monospace',
-  width: 350,
   fontSize: 16,
+  alignSelf: 'stretch',
   backgroundColor: colors.white,
   borderRadius: 5,
   padding: 5,

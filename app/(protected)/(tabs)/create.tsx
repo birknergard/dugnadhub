@@ -32,7 +32,6 @@ export default function Create() {
   // FIX: Store previous ref, possibly allowing user to jump between steps later
   const previousValidStep = useRef(validSteps);
 
-
   const [category, setCategory] = useState<Category | null>(null);
 
   const [title, setTitle] = useState('');
