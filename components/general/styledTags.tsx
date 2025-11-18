@@ -8,6 +8,7 @@ export interface DugnadColors {
   white: string,
   beige: string,
   bg: string,
+  black: string,
 }
 
 export const colors: DugnadColors = {
@@ -18,6 +19,7 @@ export const colors: DugnadColors = {
   white: '#F1F5FD',
   beige: '#F8CF82',
   bg: '#E4E3D5',
+  black: '#000000',
 }
 
 export const Column = styled.View({
@@ -58,6 +60,12 @@ export const Title = styled.Text({
   fontFamily: 'sans-serif',
   fontWeight: 600,
   fontSize: 30
+})
+
+export const SmallTitle = styled.Text({
+  fontFamily: 'sans-serif',
+  fontWeight: 500,
+  fontSize: 25
 })
 
 export const Label = styled.Text({

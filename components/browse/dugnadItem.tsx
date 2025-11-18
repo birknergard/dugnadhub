@@ -1,4 +1,5 @@
-import { ColumnPressable, Label, Row } from "components/general/styledTags";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { colors, Column, ColumnPressable, Heading, Label, PlainText, Row, RowPressable, SmallTitle } from "components/general/styledTags";
 import { format } from "date-fns";
 import { useRouter } from "expo-router";
 import Dugnad from "models/dugnad";
@@ -14,11 +15,31 @@ export default function DugnadItem({ dugnad }: { dugnad: Dugnad }) {
         params: { id: dugnad.id }
       })
     }}>
-      <Label>{dugnad.title}</Label>
-      <Label>{format(dugnad.startDateTime.toDate(), 'dd/MM/yyyy HH:mm')}</Label>
-      <Label>{dugnad.requiredPersons}</Label>
+      <TextColumn>
+        <SmallTitle>{dugnad.title}</SmallTitle>
+        <PlainText>{`${dugnad.address}, ${dugnad.postcode} ${dugnad.city}`}</PlainText>
+        <PlainText>{format(dugnad.startDateTime.toDate(), 'd MMMM yyyy')}</PlainText>
+      </TextColumn>
+      <Column>
+        <FontAwesome6 name={'plus'} size={20} />
+        <Label>{`${dugnad.signedUp.length}/${dugnad.requiredPersons}`}</Label>
+      </Column>
     </Body>
   );
 }
 
-const Body = styled(ColumnPressable)({})
+const Body = styled(RowPressable)<{ $isFull: boolean }>(props => ({
+  backgroundColor: props.$isFull ? colors.red : colors.green,
+  alignSelf: 'stretch',
+  justifyContent: 'space-between',
+
+  borderWidth: 2,
+  borderColor: colors.white,
+  borderRadius: 15,
+  padding: 20,
+}))
+
+const TextColumn = styled(Column)({
+  alignItems: 'flex-start',
+  gap: 3,
+})

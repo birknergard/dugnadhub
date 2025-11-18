@@ -4,13 +4,14 @@ import { TextButton } from 'components/general/buttons';
 import { Spinner } from 'components/general/spinner';
 import { Column, PlainText } from 'components/general/styledTags';
 import Dugnad from 'models/dugnad';
+import { useEffect } from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import DugnadService from 'services/dugnadService';
 import styled from 'styled-components/native';
 
 export default function Home() {
-  const { data: dugnads, isLoading } = useQuery({
+  const { data: dugnads, isLoading, refetch } = useQuery({
     queryKey: ['dugnads'],
     queryFn: async (): Promise<Dugnad[]> => {
       return await DugnadService.getDugnader()
@@ -28,13 +29,11 @@ export default function Home() {
   })
 
   if (isLoading) return (
-    <Main>
-      <Column>
-        <PlainText>Loading ...</PlainText>
-        <Spinner />
-      </Column>
-    </Main>
-  )
+    <Load>
+      <PlainText>Loading ...</PlainText>
+      <Spinner />
+    </Load>
+  );
 
   return (
     <Main>
@@ -42,10 +41,15 @@ export default function Home() {
         data={dugnads}
         renderItem={dugnad => <DugnadItem dugnad={dugnad.item} />}
         keyExtractor={item => item.id!}
+        contentContainerStyle={{ gap: 20 }}
       />
     </Main>
   );
 }
+const Load = styled(Column)({
+  flex: 1
+})
+
 
 const Main = styled.View({
   flex: 1,
@@ -56,3 +60,6 @@ const Main = styled.View({
   alignItems: 'stretch'
 });
 
+const DugnadList = styled(FlatList)({
+  gap: 10,
+})

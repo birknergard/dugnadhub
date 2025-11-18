@@ -1,4 +1,5 @@
 import { Spinner } from 'components/general/spinner';
+import { colors } from 'components/general/styledTags';
 import { Stack, Redirect } from 'expo-router';
 import { useAuthSession } from "providers/authSessionProvider";
 import { Text, View } from 'react-native';
@@ -12,6 +13,7 @@ export default function ProtectedLayout() {
       <View
         style={{
           flex: 1,
+          alignSelf: 'stretch',
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -37,7 +39,11 @@ export default function ProtectedLayout() {
       <Stack.Screen name='(tabs)' options={{
         headerShown: false,
       }} />
-      <Stack.Screen name='dugnadDetails/[id]' />
+      <Stack.Screen name='dugnadDetails/[id]' options={{
+        headerBackButtonDisplayMode: 'generic',
+        headerTitle: '',
+        headerTransparent: true,
+      }} />
     </Stack>
   );
 }

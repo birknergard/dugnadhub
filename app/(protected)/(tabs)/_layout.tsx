@@ -1,4 +1,5 @@
 import { FontAwesome6 } from '@expo/vector-icons';
+import { colors } from 'components/general/styledTags';
 import { Tabs } from 'expo-router';
 
 export default function TabLayout() {
@@ -11,9 +12,23 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           headerShown: false,
-          tabBarIcon: (props) => <FontAwesome6 name="people-group" size={props.size} />,
-          tabBarLabelStyle: { fontSize: 14 },
-          tabBarLabelPosition: 'below-icon'
+          tabBarIcon: (props) => (
+            <FontAwesome6
+              name="people-group"
+              size={props.size}
+              style={{
+                color: props.focused ? colors.black : colors.beige
+              }} />
+          ),
+          tabBarLabelStyle: {
+            fontFamily: 'sans-serif',
+            fontSize: 17,
+            fontWeight: 700,
+          },
+          tabBarActiveTintColor: colors.black,
+          tabBarInactiveTintColor: colors.black,
+          tabBarActiveBackgroundColor: colors.yellow,
+          tabBarHideOnKeyboard: true,
         }}
       />
       <Tabs.Screen
@@ -21,19 +36,47 @@ export default function TabLayout() {
         options={{
           title: 'Create',
           headerShown: false,
-          tabBarIcon: (props) => <FontAwesome6 name="add" size={props.size} />,
-          tabBarLabelStyle: { fontSize: 14 },
-          tabBarLabelPosition: 'below-icon'
+          tabBarIcon: (props) => (
+            <FontAwesome6
+              name="add"
+              size={props.size + 5}
+              style={{
+                color: props.focused ? colors.black : colors.beige
+              }} />
+          ),
+          tabBarLabelStyle: {
+            fontFamily: 'sans-serif',
+            fontSize: 17,
+            fontWeight: 700,
+          },
+          tabBarActiveTintColor: colors.black,
+          tabBarInactiveTintColor: colors.black,
+          tabBarActiveBackgroundColor: colors.yellow,
+          tabBarHideOnKeyboard: true,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: 'Create',
           headerShown: false,
-          tabBarIcon: (props) => <FontAwesome6 name="user-large" size={props.size} />,
-          tabBarLabelStyle: { fontSize: 14 },
-          tabBarLabelPosition: 'below-icon'
+          tabBarIcon: (props) => (
+            <FontAwesome6
+              name="user-large"
+              size={props.size + 5}
+              style={{
+                color: props.focused ? colors.black : colors.beige
+              }} />
+          ),
+          tabBarLabelStyle: {
+            fontFamily: 'sans-serif',
+            fontSize: 17,
+            fontWeight: 700,
+          },
+          tabBarActiveTintColor: colors.black,
+          tabBarInactiveTintColor: colors.black,
+          tabBarActiveBackgroundColor: colors.yellow,
+          tabBarHideOnKeyboard: true,
         }}
       />
     </Tabs>
