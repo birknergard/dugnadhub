@@ -3,8 +3,7 @@ import StepIndicator from 'components/create/stepIndicator';
 import { TextButton } from 'components/general/buttons';
 import { Column, Row, Title, PlainText, colors } from 'components/general/styledTags';
 import * as datefns from 'date-fns';
-import { Category, createConstants } from 'constants/createConstants';
-import Dugnad from 'models/dugnad';
+import Dugnad, { categories, Category } from 'models/dugnad';
 import { useEffect, useRef, useState } from 'react';
 import CategorySelection from 'components/create/form/categorySection';
 import { View } from 'react-native';
@@ -21,6 +20,7 @@ import { useAuthSession } from 'providers/authSessionProvider';
 import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
 import { Timestamp } from 'firebase/firestore';
+import { createConstants } from 'constants/createConstants';
 
 export default function Create() {
   const userId = useAuthSession().user?.uid ?? 'unknown user';

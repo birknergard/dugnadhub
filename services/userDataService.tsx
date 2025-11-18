@@ -1,8 +1,21 @@
-import { addDoc, collection } from 'firebase/firestore';
+import { User } from 'firebase/auth';
+import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { db } from 'firebaseConfig';
+import UserInfo from 'models/user';
 
-const UserDataService = (() => {
-  const getUser = async () => { };
+const UserService = (() => {
+  const getUser = async (id: string) => {
+    const ref = doc(db, 'user', id);
+    return await getDoc(ref)
+      .then(r => {
+        if (!r.data()) return null;
+        return { ...r.data() } as UserInfo;
+      })
+      .catch(e => {
+        console.error(`Could not fetch user from cloud on id ${id} : ${e}`);
+        return null;
+      })
+  };
 
   const postUser = async (
     userId: string,
@@ -38,4 +51,4 @@ const UserDataService = (() => {
   };
 })();
 
-export default UserDataService;
+export default UserService;

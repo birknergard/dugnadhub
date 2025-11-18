@@ -10,7 +10,6 @@ import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import DugnadService from 'services/dugnadService';
 import styled from 'styled-components/native';
-import getCategoryByName from 'util/getCategoryByString';
 
 export default function Home() {
   const { data: dugnads, isLoading, refetch } = useQuery({

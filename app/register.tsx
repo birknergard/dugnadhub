@@ -4,7 +4,7 @@ import * as WebBrowser from "expo-web-browser";
 import { signUp } from 'services/authService';
 import { useAuthSession } from "providers/authSessionProvider";
 import { TextButton } from "components/general/buttons";
-import { Label, PlainText } from "components/general/styledTags";
+import { colors, Label, PlainText } from "components/general/styledTags";
 import { useRouter } from "expo-router";
 import UserService from "services/userDataService";
 WebBrowser.maybeCompleteAuthSession();
@@ -70,7 +70,7 @@ export default function Register() {
         user.uid,
         firstName,
         lastName,
-        email,
+        user.email!,
         username,
       )
       return '';
@@ -150,12 +150,14 @@ export default function Register() {
 
       <View className={s.buttonContainer}>
         <TextButton
+          color={colors.yellow}
           text='Cancel'
           iconName=''
           iconPosition=''
           onTap={() => router.back()}
         />
         <TextButton
+          color={colors.green}
           text='Register'
           iconName=''
           iconPosition=''
