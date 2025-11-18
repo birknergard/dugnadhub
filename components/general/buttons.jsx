@@ -34,7 +34,7 @@ const StyledButton = styled.Pressable(props => ({
   borderWidth: 1,
   borderColor: colors.white,
   alignSelf: "stretch",
-  justifySontent: "center",
+  justifyContent: "center",
   alignItems: "center",
 }))
 

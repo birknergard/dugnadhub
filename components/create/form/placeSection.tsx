@@ -1,4 +1,4 @@
-import { Heading, Input, Label, PlainText, Row } from "components/general/styledTags";
+import { Column, Heading, Input, Label, PlainText, Row } from "components/general/styledTags";
 import { Text, TextInput, View } from "react-native";
 import styled from "styled-components/native";
 import { useQuery } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ export default function PlaceSelection({ address, onAddressChange, postcode, onP
   })
 
   return (
-    <>
+    <Column style={{ gap: 10 }}>
       <Label>Please provide an Address</Label>
       <Input
         value={address}
@@ -45,7 +45,7 @@ export default function PlaceSelection({ address, onAddressChange, postcode, onP
         />
         <PlainText>{city ?? 'Your city will appear here'}</PlainText>
       </StyledRow>
-    </>
+    </Column>
   );
 }
 

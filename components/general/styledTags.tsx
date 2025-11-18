@@ -75,10 +75,12 @@ export const Label = styled.Text({
 })
 
 export const Heading = styled.Text({
+  fontFamily: 'sans-serif',
   fontSize: 18,
   fontWeight: 700
 })
 
 export const PlainText = styled.Text({
-  fontSize: 16
+  fontFamily: 'sans-serif',
+  fontSize: 16,
 })

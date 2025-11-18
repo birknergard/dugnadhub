@@ -23,12 +23,15 @@ import Toast from 'react-native-toast-message';
 import { Timestamp } from 'firebase/firestore';
 
 export default function Create() {
-  const [step, setStep] = useState(1);
-  const [isShowingUI, setShowUI] = useState(true);
   const userId = useAuthSession().user?.uid ?? 'unknown user';
 
+  const [step, setStep] = useState(1);
+  const [isShowingUI, setShowUI] = useState(true);
   // Keeps count of which steps have been marked as "validated"
   const [validSteps, setValidSteps] = useState(0);
+  // FIX: Store previous ref, possibly allowing user to jump between steps later
+  const previousValidStep = useRef(validSteps);
+
 
   const [category, setCategory] = useState<Category | null>(null);
 
@@ -46,12 +49,10 @@ export default function Create() {
 
   const [images, setImages] = useState<string[]>([]);
 
-  // Store previous ref, possibly allowing user to jump between steps later
-  const previousValidStep = useRef(validSteps);
-
   const [errorMessage, setErrorMessage] = useState('');
 
   const submit = async () => {
+    // Create dugnad object
     const dugnad: Dugnad = {
       title: title,
       category: category!.name,
@@ -66,10 +67,30 @@ export default function Create() {
       images: [],
       ownerId: userId // Attach user id from current auth session
     };
+
+    // Handle post
     const request = await DugnadService.postDugnad(dugnad, images);
     if (!request) {
       return setErrorMessage('Could not submit dugnad.')
     }
+
+    // Reset all state
+    setStep(1);
+    setValidSteps(0);
+    previousValidStep.current = 0;
+
+    setCategory(null);
+    setTitle('');
+    setDescription('');
+    setAddress('');
+    setPostcode('');
+    setCity('');
+    setDateTime(null);
+    setDuration(0);
+    setPeople(0);
+    setImages([]);
+
+    // Navigate away with message
     Toast.show({
       type: 'success',
       text1: `Created new dugnad ${title}!`
@@ -77,35 +98,27 @@ export default function Create() {
     router.navigate('/')
   };
 
-  useEffect(() => {
-    if (category) {
+  const validateStep = (
+    step: number,
+    condition: boolean,
+    manualValidatedStep?: number
+  ): boolean => {
+    if (condition) {
       previousValidStep.current = validSteps;
-      setValidSteps(1);
+      setValidSteps(manualValidatedStep ?? step);
+      return true;
     } else {
-      setValidSteps(0);
+      setValidSteps(step - 1);
+      return false;
     }
-  }, [category]);
+  }
 
+  // Handles input validation for all steps
   useEffect(() => {
-    if (title !== '' && description !== '') {
-      previousValidStep.current = validSteps;
-      setValidSteps(2);
-    } else {
-      setValidSteps(1);
-    }
-  }, [title, description]);
-
-  useEffect(() => {
-    if (address !== '' && postcode.length === 4, city !== '') {
-      previousValidStep.current = validSteps;
-      setValidSteps(3);
-    } else {
-      setValidSteps(2);
-    }
-  }, [address, postcode, city]);
-
-  useEffect(() => {
-    if (!dateTime) {
+    if (!validateStep(1, category !== null)) return;
+    if (!validateStep(2, title !== '' && description !== '')) return;
+    if (!validateStep(3, address !== '' && postcode.length === 4 && city !== '')) return;
+    if (step < 4 || !dateTime) {
       return
     }
 
@@ -121,23 +134,13 @@ export default function Create() {
       return
     }
 
-    if (dateTime && duration > 0) {
-      previousValidStep.current = validSteps;
-      setValidSteps(4);
-    } else {
-      setValidSteps(3);
-      return
-    }
-  }, [dateTime, duration])
+    if (!validateStep(4, dateTime !== null && duration > 0)) return;
+    if (!validateStep(5, people > 0, 7)) return;
+  }, [category, title, description, address, postcode, city, dateTime, duration, people])
 
   useEffect(() => {
-    if (people > 0) {
-      previousValidStep.current = validSteps;
-      setValidSteps(7); // Since images (next form) are optional, we skip straight to 7
-    } else {
-      setValidSteps(4);
-    }
-  }, [people]);
+    console.log(validSteps)
+  }, [validSteps])
 
   useEffect(() => {
     if (errorMessage !== '') {
@@ -164,6 +167,7 @@ export default function Create() {
       setCity={setCity}
     />,
     <DateAndTimeSelection
+      dateTime={dateTime}
       setDateTime={setDateTime}
       duration={duration}
       setDuration={setDuration}

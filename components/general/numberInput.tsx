@@ -3,21 +3,33 @@ import { colors, Row } from "./styledTags";
 import styled from "styled-components/native";
 import { Pressable } from "react-native";
 
-export default function NumberInput({ value, suffix, onChange }: {
+export default function NumberInput({ min, max, value, suffix, onChange }: {
   value: number,
   suffix?: string,
   onChange: (value: number) => void
+  min?: number,
+  max?: number,
 }) {
   return (
     <StyledRow>
-      <Pressable onPress={() => onChange(value - 1)}>
-        <FontAwesome6 name='chevron-left' size={30} />
+      <Pressable onPress={() => {
+        if (min && value - 1 < min) {
+          return
+        }
+        onChange(value - 1)
+      }}>
+        <FontAwesome6 name='caret-left' size={25} />
       </Pressable>
 
       <Value>{value + ` ${suffix}`}</Value>
 
-      <Pressable onPress={() => onChange(value + 1)}>
-        <FontAwesome6 name='chevron-right' size={30} />
+      <Pressable onPress={() => {
+        if (max && value + 1 > max) {
+          return
+        }
+        onChange(value + 1)
+      }}>
+        <FontAwesome6 name='caret-right' size={25} />
       </Pressable>
     </StyledRow>
   );

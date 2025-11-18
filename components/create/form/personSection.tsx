@@ -15,6 +15,7 @@ export default function PersonsSelection({ people, onPeopleChange }: {
         value={people}
         suffix="person(s)"
         onChange={onPeopleChange}
+        min={1}
       />
     </StyledColumn>
   );

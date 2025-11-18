@@ -9,6 +9,9 @@ export default function StepIndicator({
   currentStep: number;
   setStep: (step: number) => void;
 }) {
+
+  const isCurrentStep = (step: number): boolean => step === currentStep - 1
+
   return (
     <Row>
       {Array.from<number>({ length: currentStep }).map((_, step) => (
@@ -22,7 +25,10 @@ export default function StepIndicator({
               {step + 1}
             </PlainText>
           </Pressable>
-          <AntDesign name={step === currentStep - 1 ? 'arrow-right' : 'line'} size={22} style={{ color: colors.red }} />
+          <AntDesign
+            name={isCurrentStep(step) ? 'arrow-right' : 'line'}
+            size={isCurrentStep(step) ? 22 : 20}
+            style={{ color: colors.red }} />
         </Row>
       ))}
     </Row>
@@ -30,7 +36,7 @@ export default function StepIndicator({
 }
 
 const s = {
-  base: 'flex justify-center items-center rounded-full border-2 border-dugnad-red p-4 w-10 h-10',
+  base: 'flex justify-center items-center rounded-full border-2 border-dugnad-red w-10 h-10',
   current: 'bg-dugnad-red -m-1',
-  normal: 'bg-dugnad-white -m-1',
+  normal: 'bg-dugnad-black -m-1',
 };
