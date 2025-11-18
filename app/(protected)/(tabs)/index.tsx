@@ -4,12 +4,13 @@ import { TextButton } from 'components/general/buttons';
 import { Spinner } from 'components/general/spinner';
 import { Column, Input, PlainText, SmallTitle, Title } from 'components/general/styledTags';
 import { useFocusEffect } from 'expo-router';
-import Dugnad from 'models/dugnad';
+import Dugnad, { getFormattedAddress } from 'models/dugnad';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import DugnadService from 'services/dugnadService';
 import styled from 'styled-components/native';
+import getCategoryByName from 'util/getCategoryByString';
 
 export default function Home() {
   const { data: dugnads, isLoading, refetch } = useQuery({
@@ -27,7 +28,7 @@ export default function Home() {
           return [];
         })
     },
-    enabled: true
+    enabled: true,
   })
   // Refetches whevener the window appears
   useFocusEffect(
@@ -47,14 +48,15 @@ export default function Home() {
   );
 
   const getFilteredList = (source: Dugnad[], searchQuery: string): Dugnad[] => {
+    const query = searchQuery.toLowerCase();
     return source.filter(dugnad => {
-      return dugnad.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const base = dugnad.title + getFormattedAddress(dugnad).toLowerCase()
+      return base.includes(query);
     });
   }
 
   useEffect(() => {
     if (!dugnads) return;
-
     if (searchQuery === '') {
       setDisplayList([...dugnads])
     } else {

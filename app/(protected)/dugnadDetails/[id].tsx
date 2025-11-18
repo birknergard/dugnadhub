@@ -4,7 +4,7 @@ import { Spinner } from 'components/general/spinner';
 import { colors, Column, Heading, Label, PlainText, Row, Title } from 'components/general/styledTags';
 import { format } from 'date-fns';
 import { useLocalSearchParams, useSearchParams } from 'expo-router/build/hooks';
-import Dugnad from 'models/dugnad';
+import Dugnad, { getFormattedAddress } from 'models/dugnad';
 import { useAuthSession } from 'providers/authSessionProvider';
 import { useState } from 'react';
 import { Image, ScrollView, View } from 'react-native';
@@ -111,7 +111,7 @@ export default function DugnadDetails({ }: {}) {
             </Column>
             <Section>
               <Heading>Place</Heading>
-              <PlainText>{dugnad.address}, {dugnad.postcode} {dugnad.city}</PlainText>
+              <PlainText>{getFormattedAddress(dugnad)}</PlainText>
             </Section>
             <Section>
               <Row style={{ alignSelf: 'stretch', justifyContent: 'space-evenly' }}>
