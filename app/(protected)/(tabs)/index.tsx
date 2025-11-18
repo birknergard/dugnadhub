@@ -3,8 +3,9 @@ import DugnadItem from 'components/browse/dugnadItem';
 import { TextButton } from 'components/general/buttons';
 import { Spinner } from 'components/general/spinner';
 import { Column, PlainText } from 'components/general/styledTags';
+import { useFocusEffect } from 'expo-router';
 import Dugnad from 'models/dugnad';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import DugnadService from 'services/dugnadService';
@@ -25,8 +26,15 @@ export default function Home() {
           console.error(e);
           return [];
         })
-    }
+    },
+    enabled: true
   })
+  // Refetches whevener the window appears
+  useFocusEffect(
+    useCallback(() => {
+      refetch()
+    }, [])
+  );
 
   if (isLoading) return (
     <Load>
