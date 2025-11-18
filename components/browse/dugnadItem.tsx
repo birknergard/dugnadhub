@@ -9,7 +9,7 @@ export default function DugnadItem({ dugnad }: { dugnad: Dugnad }) {
   const router = useRouter()
 
   return (
-    <Body onPress={() => {
+    <Body $isFull={dugnad.requiredPersons <= dugnad.signedUp.length} onPress={() => {
       router.navigate({
         pathname: '/dugnadDetails/[id]',
         params: { id: dugnad.id }

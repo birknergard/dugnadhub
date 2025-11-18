@@ -1,5 +1,5 @@
 import { AntDesign } from '@expo/vector-icons';
-import { Column, PlainText, Row } from 'components/general/styledTags';
+import { colors, Column, PlainText, Row } from 'components/general/styledTags';
 import { View, Text, Pressable } from 'react-native';
 
 export default function StepIndicator({
@@ -22,7 +22,7 @@ export default function StepIndicator({
               {step + 1}
             </PlainText>
           </Pressable>
-          <AntDesign name={step === currentStep - 1 ? 'arrow-right' : 'line'} size={25} />
+          <AntDesign name={step === currentStep - 1 ? 'arrow-right' : 'line'} size={22} style={{ color: colors.red }} />
         </Row>
       ))}
     </Row>
@@ -30,7 +30,7 @@ export default function StepIndicator({
 }
 
 const s = {
-  base: 'flex justify-center items-center rounded-full border-2 border-black p-1 w-10 h-10',
+  base: 'flex justify-center items-center rounded-full border-2 border-dugnad-red p-4 w-10 h-10',
   current: 'bg-dugnad-red -m-1',
-  normal: 'bg-dugnad-yellow -m-1',
+  normal: 'bg-dugnad-white -m-1',
 };
