@@ -1,6 +1,6 @@
 import { FontAwesome6 } from '@expo/vector-icons';
 import { colors, Column, Heading, Label, PlainText, Row, RowPressable } from 'components/general/styledTags';
-import { categoryConstants, Category } from 'constants/createConstants';
+import { categories, Category } from 'models/dugnad';
 import { useState } from 'react';
 import { Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import styled from 'styled-components/native';
@@ -14,7 +14,7 @@ export default function CategorySelection({ selected, onCategorySelect }: {
       <ListColumn>
         <Label>Please select a category from the list below</Label>
         {
-          categoryConstants.map((category, i) => (
+          categories.map((category, i) => (
             <ListItem
               key={i + 10}
               $selected={selected === category}

@@ -16,7 +16,10 @@ export default function Home() {
     queryKey: ['dugnads'],
     queryFn: async (): Promise<Dugnad[]> => {
       return await DugnadService.getDugnader()
-        .then(r => r)
+        .then(r => {
+          setDisplayList([...r]);
+          return r;
+        })
         .catch(e => {
           const errorMessage = 'Error when retrieving dugnads.';
           Toast.show({
@@ -29,22 +32,9 @@ export default function Home() {
     },
     enabled: true,
   })
-  // Refetches whevener the window appears
-  useFocusEffect(
-    useCallback(() => {
-      refetch()
-    }, [])
-  );
 
   const [searchQuery, setSearchQuery] = useState('');
   const [displayList, setDisplayList] = useState<Dugnad[]>([]);
-
-  if (isLoading) return (
-    <Load>
-      <PlainText>Loading ...</PlainText>
-      <Spinner />
-    </Load>
-  );
 
   const getFilteredList = (source: Dugnad[], searchQuery: string): Dugnad[] => {
     const query = searchQuery.toLowerCase();
@@ -53,15 +43,28 @@ export default function Home() {
       return base.includes(query);
     });
   }
+  // Refetches whevener the window appears
+  useFocusEffect(
+    useCallback(() => {
+      refetch()
+    }, [])
+  );
 
   useEffect(() => {
     if (!dugnads) return;
     if (searchQuery === '') {
-      setDisplayList([...dugnads])
+      setDisplayList([...dugnads]);
     } else {
       setDisplayList(getFilteredList(dugnads, searchQuery));
     }
-  }, [dugnads, searchQuery])
+  }, [dugnads, searchQuery]);
+
+  if (isLoading) return (
+    <Load>
+      <PlainText>Loading ...</PlainText>
+      <Spinner />
+    </Load>
+  );
 
   return (
     <Main>
@@ -78,6 +81,7 @@ export default function Home() {
           onChangeText={setSearchQuery}
           placeholder='Search by title ...'
         />
+        <SearchNote>{`returned results: ${displayList.length}`}</SearchNote>
       </SearchField>
     </Main>
   );
@@ -104,6 +108,11 @@ const DugnadList = styled(FlatList)({
 
 const SearchField = styled(Column)({
   alignItems: 'flex-start'
+})
+
+const SearchNote = styled(PlainText)({
+  color: '#555555',
+  marginLeft: 8,
 })
 
 const SearchInput = styled(Input)({

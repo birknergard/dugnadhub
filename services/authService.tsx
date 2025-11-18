@@ -4,6 +4,8 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+import UserInfo from "models/user";
+import UserService from "./userService";
 
 export const signIn = async (email: string, password: string) => {
   try {
@@ -26,7 +28,13 @@ export const signOut = async () => {
   }
 };
 
-export const signUp = async (email: string, password: string, username: string) => {
+export const signUp = async (
+  firstName: string,
+  lastName: string,
+  email: string,
+  username: string,
+  password: string
+) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
@@ -34,6 +42,13 @@ export const signUp = async (email: string, password: string, username: string) 
       await updateProfile(auth.currentUser, {
         displayName: username,
       });
+      await UserService.postUser(
+        userCredential.user.uid,
+        firstName,
+        lastName,
+        email,
+        username,
+      )
     }
 
     return userCredential.user; // optional, return the user

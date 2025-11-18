@@ -138,10 +138,6 @@ export default function Create() {
   }, [category, title, description, address, postcode, city, dateTime, duration, people])
 
   useEffect(() => {
-    console.log(validSteps)
-  }, [validSteps])
-
-  useEffect(() => {
     if (errorMessage !== '') {
       Toast.show({
         type: 'error',

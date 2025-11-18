@@ -6,7 +6,7 @@ import { useAuthSession } from "providers/authSessionProvider";
 import { TextButton } from "components/general/buttons";
 import { colors, Label, PlainText } from "components/general/styledTags";
 import { useRouter } from "expo-router";
-import UserService from "services/userDataService";
+import UserService from "services/userService";
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Register() {
@@ -65,14 +65,7 @@ export default function Register() {
     }
 
     try {
-      const user = await signUp(email, password, username)
-      await UserService.postUser(
-        user.uid,
-        firstName,
-        lastName,
-        user.email!,
-        username,
-      )
+      await signUp(firstName, lastName, email, username, password);
       return '';
     } catch (e) {
       console.error('Failed to create user: ', e);

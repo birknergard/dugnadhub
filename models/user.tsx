@@ -1,9 +1,11 @@
+import { Timestamp } from "firebase/firestore";
+
 export default interface UserInfo {
-  userId: string;
   firstName: string,
   lastName: string,
-  email: string,
   username: string,
-  volunteerFor: string[], // Dugnad id array
-  dateCreated: Date,
+  volunteerFor: string[],
+  organizerFor: string[],
+  picture: string,
+  dateCreated: Timestamp,
 }
