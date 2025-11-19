@@ -15,8 +15,15 @@ export default interface Dugnad {
   requiredPersons: number;
   signedUp: string[]; // userids of signed up users
   images: string[];
-  commments: string[];
+  commments: { username: string, comment: string }[];
   likedBy: string[];
+}
+
+export interface Comment {
+  comment: string
+  dugnadId: string,
+  userId: string,
+  dateCreated: Timestamp
 }
 
 export interface Category {
