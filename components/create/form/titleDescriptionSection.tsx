@@ -29,8 +29,8 @@ export default function TitleAndDescriptionSelection({
       setErrorMessage('Arbeidsoppgave må ha minst 4 bokstaver.');
       return;
     }
-
     setTaskList([...taskList, task]);
+    setTask('');
   }
 
   const removeTask = (taskIndex: number) => {
@@ -69,7 +69,7 @@ export default function TitleAndDescriptionSelection({
       <Label>Legg inn arbeidsoppgaver</Label>
       <TaskColumn>
         <TaskInputRow>
-          <TaskInput value={task} onChangeText={setTask} />
+          <TaskInput value={task} onChangeText={setTask} placeholder='Skriv inn arbeidsoppgave ...' />
           <AddTaskButton
             color={colors.green}
             iconName=''
@@ -85,8 +85,10 @@ export default function TitleAndDescriptionSelection({
           keyExtractor={(item, i) => item + i}
           renderItem={({ item, index }) => (
             <TaskContainer>
-              <PlainText>{item}</PlainText>
+              <PlainText>{index + 1}. {item}</PlainText>
               <IconButton
+                size={20}
+                color={colors.red}
                 iconName='xmark'
                 onTap={() => removeTask(index)}
               />
@@ -100,10 +102,11 @@ export default function TitleAndDescriptionSelection({
 
 const InputBox = styled(Input)({
   height: 100,
-  textAlignVertical: 'top',
+  textAlignVertical: 'top'
 })
 
 const TaskColumn = styled(Column)({
+  flex: 1,
   alignSelf: 'stretch',
   alignItems: 'center',
   justifyContent: 'center',
@@ -111,7 +114,6 @@ const TaskColumn = styled(Column)({
 })
 
 const TaskInputRow = styled(Row)({
-  flexGrow: 1,
   alignSelf: 'stretch',
   gap: 10,
   alignItems: 'center',
@@ -132,7 +134,7 @@ const TaskContainer = styled(Row)({
   borderWidth: 1,
   borderRadius: 15,
   borderColor: colors.white,
-  backgroundColor: colors.green,
+  backgroundColor: colors.yellow,
   padding: 5,
   paddingLeft: 10,
 })

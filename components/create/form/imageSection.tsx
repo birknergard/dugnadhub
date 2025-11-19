@@ -20,6 +20,7 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
     if (photo?.uri) {
       onImageAdd([...images, photo.uri]);
       setMode(null);
+      setShowUI(true)
     }
   }
 
@@ -59,7 +60,9 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
           setMode(null)
           setShowUI(true)
         }} iconName='' iconPosition='' />
-        <IconButton iconName="camera" onTap={async () => await captureImage()} />
+        {(permission?.granted) &&
+          <IconButton iconName="camera" onTap={async () => await captureImage()} size={30} color={colors.green} />
+        }
       </CameraButtons>
     </Column>
   );

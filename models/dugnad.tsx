@@ -6,6 +6,7 @@ export default interface Dugnad {
   ownerId: string,
   title: string;
   description: string;
+  taskList: string[];
   address: string;
   postcode: string;
   city: string;
@@ -14,6 +15,8 @@ export default interface Dugnad {
   requiredPersons: number;
   signedUp: string[]; // userids of signed up users
   images: string[];
+  commments: string[];
+  likedBy: string[];
 }
 
 export interface Category {

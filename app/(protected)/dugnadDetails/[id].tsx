@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { IconButton, TextButton } from 'components/general/buttons';
+import DugnadView from 'components/general/dugnadView';
 import { Spinner } from 'components/general/spinner';
 import { colors, Column, Heading, Label, PlainText, Row, Title } from 'components/general/styledTags';
 import { format } from 'date-fns';
@@ -14,7 +15,6 @@ import styled from 'styled-components/native';
 
 export default function DugnadDetails({ }: {}) {
   const { id } = useLocalSearchParams();
-  const [currentImage, setCurrentImage] = useState(0);
   const userId = useAuthSession().user!.uid;
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -66,73 +66,7 @@ export default function DugnadDetails({ }: {}) {
       ) : (
         <ScrollView style={{ flex: 1, alignSelf: 'stretch', padding: 20 }}>
           <Body>
-            <Header>
-              <Title>{dugnad.title}</Title>
-              <Heading>{dugnad.category}</Heading>
-            </Header>
-            <Column style={{ gap: 10, alignSelf: 'stretch' }}>
-              <ImageSection>
-                <DescriptionField>
-                  <Heading>Beskrivelse</Heading>
-                  <PlainText>{dugnad.description}</PlainText>
-                </DescriptionField>
-                {dugnad.images.length > 0 &&
-                  <StyledImage source={{ uri: dugnad.images[currentImage] }} resizeMode='cover' />
-                }
-              </ImageSection>
-              {dugnad.images.length > 0 &&
-                <ImageButtons>
-                  {(0 < currentImage && currentImage <= dugnad.images.length - 1) &&
-                    <TextButton
-                      color={colors.beige}
-                      text='Prev'
-                      iconName='caret-left'
-                      iconPosition='right'
-                      onTap={() => {
-                        setCurrentImage(currentImage - 1)
-                      }}
-                    />
-                  }
-                  <View></View>
-                  {(0 <= currentImage && currentImage < dugnad.images.length - 1) &&
-                    <TextButton
-                      color={colors.beige}
-                      text='Next'
-                      iconName='caret-right'
-                      iconPosition='left'
-                      onTap={() => {
-                        setCurrentImage(currentImage + 1)
-                      }}
-                    />
-                  }
-                </ImageButtons>
-              }
-
-            </Column>
-            <Section>
-              <Heading>Sted</Heading>
-              <PlainText>{getFormattedAddress(dugnad)}</PlainText>
-            </Section>
-            <Section>
-              <Row style={{ alignSelf: 'stretch', justifyContent: 'space-evenly' }}>
-                <Column>
-                  <Heading>Dato</Heading>
-                  <PlainText>{format(dugnad.startDateTime.toDate(), "dd MMMM yyyy")}</PlainText>
-                </Column>
-                <Column>
-                  <Heading>Varighet</Heading>
-                  <PlainText>
-                    {`From ${format(dugnad.startDateTime.toDate(), "HH:mm")} to ${format(dugnad.endDateTime.toDate(), "HH:mm")}`}
-                  </PlainText>
-                </Column>
-              </Row>
-            </Section>
-
-            <Section>
-              <Heading>Påmeldte</Heading>
-              <Title>{`${dugnad.signedUp.length} av ${dugnad.requiredPersons}`}</Title>
-            </Section>
-
+            <DugnadView dugnad={dugnad} />
             {dugnad.signedUp.includes(userId) ? (
               <TextButton
                 text='Meld deg på'

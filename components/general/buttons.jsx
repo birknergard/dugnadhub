@@ -6,10 +6,10 @@ import styled from 'styled-components/native';
 
 // In Javascript because FontAwesome6 was giving annoying errors for acceptable names
 
-export function IconButton({ iconName, onTap }) {
+export function IconButton({ iconName, onTap, size, color }) {
   return (
-    <StyledIconButton onPress={onTap}>
-      <FontAwesome6 name={iconName} size={30} />
+    <StyledIconButton onPress={onTap} $color={color}>
+      <FontAwesome6 name={iconName} size={size} />
     </StyledIconButton>
   );
 }
@@ -43,6 +43,7 @@ const ButtonLabel = styled(Label)({
   textAlign: 'center'
 })
 
-const StyledIconButton = styled(StyledButton)`
-  border-radius: 50px;
-`
+const StyledIconButton = styled(StyledButton)(props => ({
+  borderRadius: 15,
+  backgroundColor: props.$color,
+}))

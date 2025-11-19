@@ -50,22 +50,29 @@ export default function Create() {
 
   const [errorMessage, setErrorMessage] = useState('');
 
-  const submit = async () => {
-    // Create dugnad object
-    const dugnad: Dugnad = {
+  const createDugnadObject = (preview?: boolean): Dugnad => {
+    return {
       title: title,
       category: category!.name,
       description: description,
+      taskList: taskList,
       address: address,
       postcode: postcode,
       city: city,
       startDateTime: Timestamp.fromDate(dateTime!),
       endDateTime: Timestamp.fromDate(datefns.addHours(dateTime!, duration)),
-      signedUp: [],
       requiredPersons: people,
-      images: [],
-      ownerId: userId // Attach user id from current auth session
-    };
+      images: preview ? images : [],
+      ownerId: userId, // Attach user id from current auth session
+      signedUp: [],
+      commments: [],
+      likedBy: [],
+    }
+  }
+
+  const submit = async () => {
+    // Create dugnad object
+    const dugnad: Dugnad = createDugnadObject();
 
     // Handle post
     const request = await DugnadService.postDugnad(dugnad, images);
@@ -119,19 +126,19 @@ export default function Create() {
     if (!validateStep(2, title !== '' && description !== '' && taskList.length > 0)) return;
     if (!validateStep(3, address !== '' && postcode.length === 4 && city !== '')) return;
     if (step < 4 || !dateTime) {
-      return
+      return;
     }
 
     if (datefns.isToday(dateTime)) {
       setErrorMessage('Ugyldig dato, kan ikke være samme dag');
       setValidSteps(3);
-      return
+      return;
     }
 
     if (!datefns.isFuture(dateTime)) {
       setErrorMessage('Ugyldig dato, må være frem i tid.');
       setValidSteps(3);
-      return
+      return;
     }
 
     if (!validateStep(4, dateTime !== null && duration > 0)) return;
@@ -172,7 +179,6 @@ export default function Create() {
     />,
     <PersonsSelection people={people} onPeopleChange={setPeople} />,
     <ImageUpload images={images} onImageAdd={setImages} setShowUI={setShowUI} />,
-    <Finalize />
   ];
 
   return (
@@ -183,7 +189,7 @@ export default function Create() {
       </StepIndicatorColumn>
       <Form>
         <SectionTitle $hidden={!isShowingUI}>{createConstants.sections[step - 1].title}</SectionTitle>
-        {SectionList[step - 1]}
+        {step < 7 ? SectionList[step - 1] : <Finalize dugnad={createDugnadObject(true)} />}
       </Form>
       {isShowingUI &&
         <StepButtons $firstStep={step === 1}>

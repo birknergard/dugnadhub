@@ -4,14 +4,14 @@ import DugnadForm from "./dugnadForm";
 import { createConstants } from "constants/createConstants";
 import { ScrollView, Text } from "react-native";
 import styled from "styled-components/native";
+import Dugnad from "models/dugnad";
+import DugnadView from "components/general/dugnadView";
 
-export default function Finalize({ }: {}) {
+export default function Finalize({ dugnad }: { dugnad: Dugnad }) {
   return (
     <PreviewContainer>
       <StyledScrollView>
-        {Array.from<number>({ length: 300 }).map((_, index) => (
-          <PlainText key={index}>LAG FORHANDSVISNING {index}</PlainText>
-        ))}
+        <DugnadView dugnad={dugnad} />
       </StyledScrollView>
     </PreviewContainer>
   );
@@ -24,6 +24,6 @@ const PreviewContainer = styled(Column)({
 
 const StyledScrollView = styled(ScrollView)({
   flex: 1,
-  alignSelf: 'stretch'
+  alignSelf: 'stretch',
 })
 
