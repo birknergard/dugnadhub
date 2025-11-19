@@ -7,6 +7,7 @@ import { useAuthSession } from "providers/authSessionProvider";
 import { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 import CommentService from "services/commentService";
+import UserService from "services/userService";
 import styled from "styled-components/native";
 
 export default function CommentSection({ dugnadId }: { dugnadId: string }) {

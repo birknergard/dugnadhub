@@ -6,6 +6,7 @@ import { Spinner } from 'components/general/spinner';
 import { colors, Column, Heading, Label, PlainText, Row, Title } from 'components/general/styledTags';
 import { format } from 'date-fns';
 import { useLocalSearchParams, useSearchParams } from 'expo-router/build/hooks';
+import useErrorToast from 'hooks/useToast';
 import Dugnad, { getFormattedAddress } from 'models/dugnad';
 import { useAuthSession } from 'providers/authSessionProvider';
 import { useState } from 'react';
@@ -17,7 +18,7 @@ import styled from 'styled-components/native';
 export default function DugnadDetails({ }: {}) {
   const { id } = useLocalSearchParams();
   const userId = useAuthSession().user!.uid;
-  const [errorMessage, setErrorMessage] = useState('');
+  const printError = useErrorToast();
 
   const { data: dugnad, isLoading, refetch } = useQuery({
     queryKey: ['dugnadDetails', id],
@@ -36,7 +37,7 @@ export default function DugnadDetails({ }: {}) {
             text1: `Du er avmeldt dugnaden ${dugnad!.title}`
           })
         }
-        setErrorMessage(`Feil: kunne ikke melde deg av dugnaden ${dugnad!.title}`);
+        printError(`Feil: kunne ikke melde deg av dugnaden ${dugnad!.title}`);
       });
     refetch();
   }
@@ -49,7 +50,7 @@ export default function DugnadDetails({ }: {}) {
             text1: `Du er påmeldt på dugnaden ${dugnad!.title}`
           })
         }
-        setErrorMessage(`Feil: kunne ikke melde deg av ${dugnad!.title}`);
+        printError(`Feil: kunne ikke melde deg av ${dugnad!.title}`);
       });
     refetch();
   }

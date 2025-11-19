@@ -22,6 +22,7 @@ const CommentService = (() => {
     comment: string,
     dugnadId: string,
     userId: string,
+    username: string,
   ): Promise<boolean> => {
     // Gets a unique id and creates a doc on that id
     const commentId = doc(collection(db, 'comments')).id;
@@ -32,6 +33,7 @@ const CommentService = (() => {
       comment: comment,
       dugnadId: dugnadId,
       userId: userId,
+      username: username,
       dateCreated: Timestamp.now(),
     } as Comment)
       .then((r) => {

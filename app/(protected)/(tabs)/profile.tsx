@@ -14,22 +14,7 @@ import UserService from "services/userService";
 import styled from "styled-components/native";
 
 export default function Profile() {
-  const currentUserMail = useAuthSession().user!.email!;
-
-  const { data: userInfo, isLoading, refetch } = useQuery({
-    queryKey: ['userInfo'],
-    queryFn: async (): Promise<UserInfo | null> => {
-      return await UserService.getUser(currentUserMail)
-        .then(r => {
-          console.log(currentUserMail)
-          return r ?? null
-        })
-        .catch(e => {
-          console.error(`Feil: Kunne ikke laste profil: ${e}`)
-          return null;
-        })
-    }
-  })
+  const userSession = useAuthSession();
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -42,13 +27,7 @@ export default function Profile() {
     }
   }, [errorMessage])
 
-  if (isLoading) return (
-    <Main>
-      <Spinner />
-    </Main>
-  );
-
-  if (!userInfo) return (
+  if (!userSession.userInfo) return (
     <Main>
       <PlainText>Kunne ikke laste inn bruker</PlainText>
     </Main>
@@ -59,16 +38,16 @@ export default function Profile() {
       <ProfilePictureContainer
         onPress={() => { }}
       >
-        {userInfo.picture !== '' ? (
-          <Image source={{ uri: userInfo.picture }} />
+        {userSession.userInfo.picture !== '' ? (
+          <Image source={{ uri: userSession.userInfo.picture }} />
         ) : (
           <FontAwesome6 name='user' size={120} />
         )}
       </ProfilePictureContainer>
-      <SmallTitle>{`${userInfo.firstName} ${userInfo.lastName}`}</SmallTitle>
-      <PlainText>{userInfo.username}</PlainText>
-      <PlainText>{currentUserMail}</PlainText>
-      <PlainText>Registrert {format(userInfo.dateCreated.toDate(), "d MMMM yyyy")}</PlainText>
+      <SmallTitle>{`${userSession.userInfo.firstName} ${userSession.userInfo.lastName}`}</SmallTitle>
+      <PlainText>{userSession.userInfo.username}</PlainText>
+      <PlainText>{userSession.user!.email}</PlainText>
+      <PlainText>Registrert {format(userSession.userInfo.dateCreated.toDate(), "d MMMM yyyy")}</PlainText>
     </Main>
   );
 }
