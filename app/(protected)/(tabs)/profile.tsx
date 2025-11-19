@@ -9,6 +9,7 @@ import UserInfo from "models/user";
 import { useAuthSession } from "providers/authSessionProvider";
 import { useEffect, useState } from "react";
 import { Image } from "react-native";
+import Toast from "react-native-toast-message";
 import UserService from "services/userService";
 import styled from "styled-components/native";
 
@@ -24,13 +25,22 @@ export default function Profile() {
           return r ?? null
         })
         .catch(e => {
-          console.error(`Could not load user info: ${e}`)
+          console.error(`Feil: Kunne ikke laste profil: ${e}`)
           return null;
         })
     }
   })
 
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    if (errorMessage != '') {
+      Toast.show({
+        type: 'error',
+        text1: errorMessage
+      })
+    }
+  }, [errorMessage])
 
   if (isLoading) return (
     <Main>
@@ -40,7 +50,7 @@ export default function Profile() {
 
   if (!userInfo) return (
     <Main>
-      <PlainText>Could not load user</PlainText>
+      <PlainText>Kunne ikke laste inn bruker</PlainText>
     </Main>
   );
 
@@ -58,7 +68,7 @@ export default function Profile() {
       <SmallTitle>{`${userInfo.firstName} ${userInfo.lastName}`}</SmallTitle>
       <PlainText>{userInfo.username}</PlainText>
       <PlainText>{currentUserMail}</PlainText>
-      <PlainText>Registered {format(userInfo.dateCreated.toDate(), "d MMMM yyyy")}</PlainText>
+      <PlainText>Registrert {format(userInfo.dateCreated.toDate(), "d MMMM yyyy")}</PlainText>
     </Main>
   );
 }

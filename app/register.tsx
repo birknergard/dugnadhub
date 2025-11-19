@@ -40,27 +40,27 @@ export default function Register() {
 
   const register = async (): Promise<string> => {
     if (firstName.length < 2) {
-      return 'Invalid first name. Must be at least 2 characters';
+      return 'Ugyldig fornavn. må være minst 2 bokstaver';
     }
 
     if (lastName.length < 3) {
-      return 'Last name needs to be at least 3 characters.'
+      return 'Ugyldig etternavn. Må være minst 3 bokstaver'
     }
 
     if (!verifyEmail(email)) {
-      return 'Invalid email address.';
+      return 'Ugyldig epost.';
     }
 
     if (password.length < 5) {
-      return 'Password needs to be at least 5 characters';
+      return 'Ditt passord må være minst 5 karakterer';
     }
 
     if (password !== verifiedPassword) {
-      return 'Re-entered password must match password';
+      return 'Passordene må være like';
     }
 
     if (username.length < 3) {
-      return 'Username needs to be at least 3 characters';
+      return 'Ditt brukernavn må være minst 3 karakterer';
     }
 
     try {
@@ -68,7 +68,7 @@ export default function Register() {
       return '';
     } catch (e) {
       console.error('Failed to create user: ', e);
-      return 'Failed to create user';
+      return 'Feil: Kunne ikke lage bruker.';
     }
   }
 
@@ -80,10 +80,10 @@ export default function Register() {
   return (
     <View className={s.mainContainer}>
       <Text className={s.title}>DugnadHub</Text>
-      <Text className={s.label}>Register new user</Text>
+      <Text className={s.label}>Registrer ny bruker</Text>
 
       <View className={s.fieldContainer}>
-        <Text className={s.label}>First name</Text>
+        <Text className={s.label}>Fornavn</Text>
         <TextInput className={s.input}
           textContentType="givenName"
           value={firstName}
@@ -92,7 +92,7 @@ export default function Register() {
       </View>
 
       <View className={s.fieldContainer}>
-        <Text className={s.label}>Last name</Text>
+        <Text className={s.label}>Ettername</Text>
         <TextInput className={s.input}
           textContentType="familyName"
           value={lastName}
@@ -101,7 +101,7 @@ export default function Register() {
       </View>
 
       <View className={s.fieldContainer}>
-        <Text className={s.label}>Email</Text>
+        <Text className={s.label}>Epost</Text>
         <TextInput className={s.input}
           textContentType="emailAddress"
           value={email}
@@ -110,7 +110,7 @@ export default function Register() {
       </View>
 
       <View className={s.fieldContainer}>
-        <Text className={s.label}>Create password</Text>
+        <Text className={s.label}>Lag passord</Text>
         <TextInput className={s.input}
           value={password}
           onChangeText={setPassword}
@@ -120,7 +120,7 @@ export default function Register() {
       </View>
 
       <View className={s.fieldContainer}>
-        <Text className={s.label}>Re-enter password</Text>
+        <Text className={s.label}>Skriv passord by nytt</Text>
         <TextInput className={s.input}
           value={verifiedPassword}
           onChangeText={setVerifiedPassword}
@@ -130,7 +130,7 @@ export default function Register() {
       </View>
 
       <View className={s.fieldContainer}>
-        <Text className={s.label}>Create your username</Text>
+        <Text className={s.label}>Lag et brukernavn</Text>
         <TextInput className={s.input}
           textContentType="username"
           value={username}
@@ -156,9 +156,7 @@ export default function Register() {
           onTap={async () => {
             const status = await register()
             setErrorMessage(status);
-          }
-
-          }
+          }}
         />
       </View>
     </View >

@@ -45,7 +45,7 @@ export default function DateAndTimeSelection({
     ) : (
       <Column>
         <AndroidPicker onPress={() => setShowAndroidDatePicker(true)}>
-          {dateTime ? format(dateTime, 'dd/MM/yyyy') : 'Not selected'}
+          {dateTime ? format(dateTime, 'dd/MM/yyyy') : 'Ikke valgt'}
         </AndroidPicker>
         {isShowingAndroidDatePicker && (
           <RNDateTimePicker mode="date" value={dateTime ?? new Date()} onChange={handleAndroidDateChange} />
@@ -67,7 +67,7 @@ export default function DateAndTimeSelection({
     ) : (
       <Column>
         <AndroidPicker onPress={() => setShowAndroidTimePicker(true)}>
-          {dateTime ? format(dateTime, 'HH:mm') : 'Select a time'}
+          {dateTime ? format(dateTime, 'HH:mm') : 'Velg starttid'}
         </AndroidPicker>
         {isShowingAndroidTimePicker && (
           <RNDateTimePicker mode="time" value={dateTime ?? new Date()} onChange={handleAndroidTimeChange} />
@@ -78,18 +78,18 @@ export default function DateAndTimeSelection({
   return (
     <StyledColumn>
       <Column>
-        <StyledLabel>Select a date</StyledLabel>
+        <StyledLabel>Velg dato for dugnaden</StyledLabel>
         <DatePickerContainer>{datePickerByPlatform}</DatePickerContainer>
       </Column>
 
       <Column>
-        <StyledLabel>Select starting time</StyledLabel>
+        <StyledLabel>Velg starttid for dugnaden</StyledLabel>
         <DatePickerContainer>{timePickerByPlatform}</DatePickerContainer>
       </Column>
 
       <StyledColumn>
-        <StyledLabel>Provide duration (hours)</StyledLabel>
-        <NumberInput value={duration} suffix="hours" min={1} max={12} onChange={setDuration} />
+        <StyledLabel>Velg varighet for dugnaden</StyledLabel>
+        <NumberInput value={duration} suffix="timer" min={1} max={12} onChange={setDuration} />
       </StyledColumn>
     </StyledColumn>
   );

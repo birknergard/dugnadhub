@@ -12,7 +12,7 @@ export default function CategorySelection({ selected, onCategorySelect }: {
   return (
     <BodyColumn>
       <ListColumn>
-        <Label>Please select a category from the list below</Label>
+        <Label>Velg en kategori som passer din dugnad</Label>
         {
           categories.map((category, i) => (
             <ListItem

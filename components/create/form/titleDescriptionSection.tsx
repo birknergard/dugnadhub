@@ -14,19 +14,19 @@ export default function TitleAndDescriptionSelection({
 }) {
   return (
     <>
-      <Label>Please create a fitting title for your dugnad</Label>
+      <Label>Gi din dugnad en passende tittel</Label>
       <Input
         onChangeText={(e) => onChangeTitle(e)}
         value={title}
-        placeholder="Write a title ..."
+        placeholder="Skriv din tittel ..."
       />
-      <Label>Please describe your dugnad</Label>
+      <Label>Beskriv din dugnad</Label>
       <InputBox
         onChangeText={(e) => onChangeDescription(e)}
         value={description}
         multiline
         numberOfLines={6}
-        placeholder="Write a description ..."
+        placeholder="Beskriv dugnaden ..."
       />
     </>
   );

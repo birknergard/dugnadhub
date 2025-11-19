@@ -18,7 +18,6 @@ export default function ProtectedLayout() {
           alignItems: "center",
         }}
       >
-        <Text>Henter bruker</Text>
         <Spinner />
       </View>
     );

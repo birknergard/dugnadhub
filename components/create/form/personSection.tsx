@@ -10,10 +10,10 @@ export default function PersonsSelection({ people, onPeopleChange }: {
 
   return (
     <StyledColumn>
-      <Label>Please select how many people you need</Label>
+      <Label>Hvor mange deltagere ønskes?</Label>
       <NumberInput
         value={people}
-        suffix="person(s)"
+        suffix="person(er)"
         onChange={onPeopleChange}
         min={1}
       />

@@ -26,14 +26,14 @@ export default function PlaceSelection({ address, onAddressChange, postcode, onP
 
   return (
     <Column style={{ gap: 10 }}>
-      <Label>Please provide an Address</Label>
+      <Label>Skriv inn addressen der dugnaden skal holdes</Label>
       <Input
         value={address}
         onChangeText={(e) => onAddressChange(e)}
         textContentType="streetAddressLine2"
-        placeholder="Write the address line ..."
+        placeholder="Skriv addressen ..."
       />
-      <Label>Please provide Postcode and City</Label>
+      <Label>Postkode og by</Label>
       <StyledRow>
         <StyledInput
           value={postcode}
@@ -41,9 +41,9 @@ export default function PlaceSelection({ address, onAddressChange, postcode, onP
           textContentType="postalCode"
           keyboardType='number-pad'
           inputMode="numeric"
-          placeholder="ex.5050"
+          placeholder="eks. 5050"
         />
-        <PlainText>{city ?? 'Your city will appear here'}</PlainText>
+        <PlainText>{city ?? ''}</PlainText>
       </StyledRow>
     </Column>
   );

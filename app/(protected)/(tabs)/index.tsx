@@ -21,7 +21,7 @@ export default function Home() {
           return r;
         })
         .catch(e => {
-          const errorMessage = 'Error when retrieving dugnads.';
+          const errorMessage = 'Feil: kunne ikke hente dugnader';
           Toast.show({
             type: 'error',
             text1: errorMessage
@@ -61,7 +61,7 @@ export default function Home() {
 
   if (isLoading) return (
     <Load>
-      <PlainText>Loading ...</PlainText>
+      <PlainText>Laster inn dugnader ...</PlainText>
       <Spinner />
     </Load>
   );
@@ -79,9 +79,9 @@ export default function Home() {
         <SearchInput
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholder='Search by title ...'
+          placeholder='Søk ...'
         />
-        <SearchNote>{`${displayList.length} results`}</SearchNote>
+        <SearchNote>{`${displayList.length} resultater`}</SearchNote>
       </SearchField>
     </Main>
   );

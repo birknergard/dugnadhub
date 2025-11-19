@@ -19,6 +19,7 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
     const photo = await cameraRef.current?.takePictureAsync();
     if (photo?.uri) {
       onImageAdd([...images, photo.uri]);
+      setMode(null);
     }
   }
 
@@ -34,8 +35,8 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
     if (!result.canceled) {
       const uris = result.assets.map((a) => a.uri);
       onImageAdd([...images, ...uris]);
+      setMode(null);
     };
-
   }
 
   if (mode === 'camera') return (
@@ -43,7 +44,7 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
       <CameraContainer>
         {(!permission?.granted) ? (
           <Column>
-            <Text className="">Please give permissions to use camera</Text>
+            <PlainText>Appen trenger tillatelse for å bruke kamera</PlainText>
           </Column>
         ) : (
           <StyledCamera
@@ -65,10 +66,10 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
 
   return (
     <StyledColumn>
-      <StyledLabel>Upload some relevant images for your dugnad</StyledLabel>
+      <StyledLabel>Last opp bilder relevant for dugnaden</StyledLabel>
       <TextButton
         color={colors.yellow}
-        text="Pick image from device"
+        text="Last opp bilder"
         onTap={() => {
           pickImage()
         }}
@@ -77,7 +78,7 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
       />
       <TextButton
         color={colors.yellow}
-        text="Take picture with camera"
+        text="Ta bilder med kamera"
         onTap={() => {
           requestPermission()
           setMode('camera')
@@ -86,7 +87,7 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
         iconName=''
         iconPosition='left'
       />
-      <StyledLabel>Images ({images.length})</StyledLabel>
+      <StyledLabel>Bilder lastet opp: {images.length}</StyledLabel>
     </StyledColumn>
   );
 }

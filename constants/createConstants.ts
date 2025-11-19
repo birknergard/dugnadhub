@@ -10,32 +10,32 @@ export interface CreateConstants {
 export const createConstants: CreateConstants = {
   sections: [
     {
-      title: 'Category',
-      description: 'Please choose a fitting category for your dugnad'
+      title: 'Kategori',
+      description: 'Vennligst velg en passende kategori for dugnaden'
     },
     {
-      title: 'Title and Description',
-      description: 'Please create an informative description and a fitting title for your dugnad.'
+      title: 'Tittel og beskrivelse',
+      description: 'Beskriv dugnaden, hvorfor den arrangeres, mål, og arbeidsoppgaver'
     },
     {
-      title: 'Place',
-      description: 'Please provide the place where the dugnad will be happening.'
+      title: 'Sted',
+      description: 'Vennlist fortell hvor dugnaden skal arrangeres'
     },
     {
-      title: 'Date and Time',
-      description: 'Please provide the date and timeframe which you want to complete your dugnad.'
+      title: 'Dato og tidspunkt',
+      description: 'Vennligst fortell når dugnaden skal arrangeres'
     },
     {
-      title: 'People',
-      description: 'Please inform us how many people you require to complete your dugnad.'
+      title: 'Deltagere',
+      description: 'Vennglist fortell hvor mange deltagere som ønskes'
     },
     {
-      title: 'Images (optional)',
-      description: 'Provide some relevant images if you wish.'
+      title: 'Bilder (Valgfritt)',
+      description: 'Legg til noen biler som er relevante til dugnaden'
     },
     {
-      title: 'Preview',
-      description: 'See a preview of your dugnad'
+      title: 'Forhåndvisning',
+      description: 'Her er dugnaden din. Om du er fornøyd kan du publisere'
     }
   ]
 }

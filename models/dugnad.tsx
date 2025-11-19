@@ -1,4 +1,3 @@
-import { Category, categoryConstants } from "constants/createConstants";
 import { Timestamp } from "firebase/firestore";
 
 export default interface Dugnad {
@@ -25,39 +24,39 @@ export interface Category {
 
 export const categories: Category[] = [
   {
-    name: "Maintenance & Upkeep",
+    name: "Vedlikehold",
     iconName: "screwdriver-wrench",
-    description: "Regular tasks that keep shared areas clean, functional, and in good condition.",
+    description: "Arbeid som holder fellesområder i god stand, som reparasjoner, maling og generelt vedlikehold.",
   },
   {
-    name: "Beautification & Improvement",
+    name: "Opprydning og forskjønning",
     iconName: "seedling",
-    description: "Projects that make the surroundings more welcoming and attractive.",
+    description: "Tiltak som gjør området ryddigere og mer trivelig, som søppelhenting, luking og enkel forskjønning.",
   },
   {
-    name: "Safety & Accessibility",
+    name: "Sikring",
     iconName: "shield-heart",
-    description: "Efforts to ensure all spaces are safe and usable for everyone.",
+    description: "Arbeid som gjør områder tryggere, for eksempel utbedring av farlige forhold eller montering av sikkerhetstiltak.",
   },
   {
-    name: "Community Building",
+    name: "Samfunnsbygging",
     iconName: "people-group",
-    description: "Activities that strengthen social bonds and promote collaboration.",
+    description: "Aktiviteter som styrker fellesskapet, samarbeidet og samholdet blant beboerne.",
   },
   {
-    name: "Environmental Sustainability",
+    name: "Miljø",
     iconName: "leaf",
-    description: "Initiatives focused on protecting nature and promoting sustainable living.",
+    description: "Dugnader som bidrar til bedre miljø, som gjenvinning, naturpleie eller bærekraftige tiltak.",
   },
   {
-    name: "Fundraising & Financial Support",
+    name: "Veldedighet",
     iconName: "coins",
-    description: "Events or tasks aimed at raising funds for shared goals or projects.",
+    description: "Innsatser som støtter gode formål, som innsamlinger eller hjelpetiltak for ulike behov.",
   },
   {
-    name: "Educational & Awareness",
+    name: "Utdanning og kunnskapsbygging",
     iconName: "lightbulb",
-    description: "Activities that share knowledge, skills, or raise awareness within the community.",
+    description: "Aktiviteter som deler nyttig kunnskap eller ferdigheter, ofte gjennom korte kurs eller veiledning.",
   },
 ]
 

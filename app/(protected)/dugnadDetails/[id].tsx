@@ -32,10 +32,10 @@ export default function DugnadDetails({ }: {}) {
         if (r) {
           Toast.show({
             type: 'success',
-            text1: `You withdrew from ${dugnad!.title}`
+            text1: `Du er avmeldt dugnaden ${dugnad!.title}`
           })
         }
-        setErrorMessage(`Error: could not remove registration for ${dugnad!.title}`);
+        setErrorMessage(`Feil: kunne ikke melde deg av dugnaden ${dugnad!.title}`);
       });
     refetch();
   }
@@ -45,10 +45,10 @@ export default function DugnadDetails({ }: {}) {
         if (r) {
           Toast.show({
             type: 'success',
-            text1: `You volunteered for ${dugnad!.title}`
+            text1: `Du er påmeldt på dugnaden ${dugnad!.title}`
           })
         }
-        setErrorMessage(`Error: could not volunteer for ${dugnad!.title}`);
+        setErrorMessage(`Feil: kunne ikke melde deg av ${dugnad!.title}`);
       });
     refetch();
   }
@@ -73,7 +73,7 @@ export default function DugnadDetails({ }: {}) {
             <Column style={{ gap: 10, alignSelf: 'stretch' }}>
               <ImageSection>
                 <DescriptionField>
-                  <Heading>Description</Heading>
+                  <Heading>Beskrivelse</Heading>
                   <PlainText>{dugnad.description}</PlainText>
                 </DescriptionField>
                 {dugnad.images.length > 0 &&
@@ -110,17 +110,17 @@ export default function DugnadDetails({ }: {}) {
 
             </Column>
             <Section>
-              <Heading>Place</Heading>
+              <Heading>Sted</Heading>
               <PlainText>{getFormattedAddress(dugnad)}</PlainText>
             </Section>
             <Section>
               <Row style={{ alignSelf: 'stretch', justifyContent: 'space-evenly' }}>
                 <Column>
-                  <Heading>Date</Heading>
+                  <Heading>Dato</Heading>
                   <PlainText>{format(dugnad.startDateTime.toDate(), "dd MMMM yyyy")}</PlainText>
                 </Column>
                 <Column>
-                  <Heading>Duration</Heading>
+                  <Heading>Varighet</Heading>
                   <PlainText>
                     {`From ${format(dugnad.startDateTime.toDate(), "HH:mm")} to ${format(dugnad.endDateTime.toDate(), "HH:mm")}`}
                   </PlainText>
@@ -129,13 +129,13 @@ export default function DugnadDetails({ }: {}) {
             </Section>
 
             <Section>
-              <Heading>Registered Volunteers</Heading>
-              <Title>{`${dugnad.signedUp.length} of ${dugnad.requiredPersons}`}</Title>
+              <Heading>Påmeldte</Heading>
+              <Title>{`${dugnad.signedUp.length} av ${dugnad.requiredPersons}`}</Title>
             </Section>
 
             {dugnad.signedUp.includes(userId) ? (
               <TextButton
-                text='Withdraw from event'
+                text='Meld deg på'
                 iconName=''
                 iconPosition=''
                 color={colors.red}
@@ -145,7 +145,7 @@ export default function DugnadDetails({ }: {}) {
               />
             ) : (
               <TextButton
-                text='Volunteer for this Dugnad'
+                text='Meld deg av'
                 iconName=''
                 iconPosition=''
                 color={colors.green}

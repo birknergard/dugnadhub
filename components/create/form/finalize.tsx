@@ -10,7 +10,7 @@ export default function Finalize({ }: {}) {
     <PreviewContainer>
       <StyledScrollView>
         {Array.from<number>({ length: 300 }).map((_, index) => (
-          <PlainText key={index}>Preview goes here {index}</PlainText>
+          <PlainText key={index}>LAG FORHANDSVISNING {index}</PlainText>
         ))}
       </StyledScrollView>
     </PreviewContainer>

@@ -29,7 +29,6 @@ export default function Create() {
   const [isShowingUI, setShowUI] = useState(true);
   // Keeps count of which steps have been marked as "validated"
   const [validSteps, setValidSteps] = useState(0);
-  // FIX: Store previous ref, possibly allowing user to jump between steps later
   const previousValidStep = useRef(validSteps);
 
   const [category, setCategory] = useState<Category | null>(null);
@@ -70,7 +69,7 @@ export default function Create() {
     // Handle post
     const request = await DugnadService.postDugnad(dugnad, images);
     if (!request) {
-      return setErrorMessage('Could not submit dugnad.')
+      return setErrorMessage('Feil: Kunne ikke lage dugnad.')
     }
 
     // Reset all state
@@ -92,7 +91,7 @@ export default function Create() {
     // Navigate away with message
     Toast.show({
       type: 'success',
-      text1: `Created new dugnad ${title}!`
+      text1: `Lagde ny dugnadsarrangement: ${title}!`
     })
     router.navigate('/')
   };
@@ -122,13 +121,13 @@ export default function Create() {
     }
 
     if (datefns.isToday(dateTime)) {
-      setErrorMessage('Invalid date, can\'t be current day');
+      setErrorMessage('Ugyldig dato, kan ikke være samme dag');
       setValidSteps(3);
       return
     }
 
     if (!datefns.isFuture(dateTime)) {
-      setErrorMessage('Invalid date, has to be in the future (not today).');
+      setErrorMessage('Ugyldig dato, må være frem i tid.');
       setValidSteps(3);
       return
     }
@@ -175,12 +174,11 @@ export default function Create() {
   return (
     <Main>
       <StepIndicatorColumn>
-        <PlainText>Press any of these steps to go back</PlainText>
+        <PlainText>Trykk på disse for å tilbake steg</PlainText>
         <StyledStepIndicator $hidden={!isShowingUI} currentStep={step} setStep={setStep} />
       </StepIndicatorColumn>
       <Form>
         <SectionTitle $hidden={!isShowingUI}>{createConstants.sections[step - 1].title}</SectionTitle>
-        {/* <Heading className={s.section.description}>{section.description}</Heading> */}
         {SectionList[step - 1]}
       </Form>
       {isShowingUI &&
@@ -201,7 +199,7 @@ export default function Create() {
           <ButtonWrapper $show={step <= 7 && step <= validSteps}>
             <TextButton
               color={step === 7 ? colors.green : colors.yellow}
-              text={step === 7 ? "Submit" : "Next"}
+              text={step === 7 ? "Publiser" : "Neste"}
               iconName={step === 7 ? "plus" : "chevron-right"}
               iconPosition="left"
               onTap={async () => {

@@ -4,6 +4,7 @@ import * as WebBrowser from "expo-web-browser";
 import { useAuthSession } from "providers/authSessionProvider";
 import { TextButton } from "components/general/buttons";
 import { useRouter } from "expo-router";
+import { colors } from "components/general/styledTags";
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
@@ -20,7 +21,7 @@ export default function Login() {
         try {
             signIn(email, password);
         } catch (error: any) {
-            return `Login failed:\\n${error}`;
+            return `Kunne ikke logge inn:\\n${error}`;
         }
     }
 
@@ -51,6 +52,7 @@ export default function Login() {
             </View>
             <View className={s.buttonContainer}>
                 <TextButton
+                    color={colors.pink}
                     text='Login'
                     iconName=''
                     iconPosition=''
@@ -59,7 +61,8 @@ export default function Login() {
                     }}
                 />
                 <TextButton
-                    text='Create new user'
+                    color={colors.yellow}
+                    text='Registrer bruker'
                     iconName=''
                     iconPosition=''
                     onTap={() => router.push('register')}
