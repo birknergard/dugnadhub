@@ -18,7 +18,6 @@ export default function Register() {
   const [verifiedPassword, setVerifiedPassword] = useState('');
   const [username, setUsername] = useState('');
 
-  const [registered, setRegistered] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   // Split the mail like below then chech each substring if they exist

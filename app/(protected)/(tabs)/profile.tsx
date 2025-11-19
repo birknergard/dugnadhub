@@ -13,7 +13,7 @@ import UserService from "services/userService";
 import styled from "styled-components/native";
 
 export default function Profile() {
-  const currentUserMail = getAuth().currentUser!.email!;
+  const currentUserMail = useAuthSession().user!.email!;
 
   const { data: userInfo, isLoading, refetch } = useQuery({
     queryKey: ['userInfo'],

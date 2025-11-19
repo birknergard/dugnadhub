@@ -62,7 +62,7 @@ export const categories: Category[] = [
 ]
 
 export function getDugnadCategory(dugnad: Dugnad): Category | null {
-  return categories.find(category => dugnad.category == category.name) ?? null;
+  return categories.find(category => dugnad.category === category.name) ?? null;
 }
 
 export function getFormattedAddress(dugnad: Dugnad): string {
