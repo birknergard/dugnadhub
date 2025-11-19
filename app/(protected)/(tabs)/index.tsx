@@ -81,7 +81,7 @@ export default function Home() {
           onChangeText={setSearchQuery}
           placeholder='Search by title ...'
         />
-        <SearchNote>{`returned results: ${displayList.length}`}</SearchNote>
+        <SearchNote>{`${displayList.length} results`}</SearchNote>
       </SearchField>
     </Main>
   );

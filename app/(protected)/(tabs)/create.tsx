@@ -184,7 +184,7 @@ export default function Create() {
         {SectionList[step - 1]}
       </Form>
       {isShowingUI &&
-        <StepButtons>
+        <StepButtons $firstStep={step === 1}>
           <ButtonWrapper $show={step >= 2}>
             <TextButton
               color={colors.yellow}
@@ -255,7 +255,8 @@ const ButtonWrapper = styled(View)<{ $show: boolean }>(props => ({
   display: props.$show ? 'block' : 'none',
 }))
 
-const StepButtons = styled(Row)({
+const StepButtons = styled(Row)<{ $firstStep: boolean }>(props => ({
   alignSelf: 'stretch',
   justifyContent: "space-between",
-})
+  flexDirection: props.$firstStep ? 'row-reverse' : 'row',
+}))
