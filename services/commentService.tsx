@@ -1,6 +1,6 @@
-import { collection, doc, getDocs, query, setDoc, Timestamp, where } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, collection, doc, getDocs, query, runTransaction, setDoc, Timestamp, updateDoc, where } from 'firebase/firestore';
 import { db } from 'firebaseConfig';
-import { Comment } from 'models/dugnad';
+import { Comment } from 'models/comment';
 
 const CommentService = (() => {
   const getCommentsByDugnad = async (dugnadId: string): Promise<Comment[]> => {
@@ -13,7 +13,7 @@ const CommentService = (() => {
         return doc.data() as Comment;
       }))
       .catch(e => {
-        console.error('Could not fetch dugnads from cloud: ', e);
+        console.error('Could not fetch comments from cloud: ', e);
         return [];
       })
   };
@@ -30,26 +30,51 @@ const CommentService = (() => {
 
     // Gets a unique id and creates a doc on that id
     return await setDoc(ref, {
+      id: commentId,
       comment: comment,
       dugnadId: dugnadId,
       userId: userId,
       username: username,
+      likes: [],
       dateCreated: Timestamp.now(),
     } as Comment)
       .then((r) => {
-        console.info("Created user: ", (userId))
+        console.info("Created comment: ", (userId))
         return true;
       })
       .catch((e) => {
-        console.error('User API error: ', e);
+        console.error('Comment API error: ', e);
         return false;
       });
+  };
+
+  const updateCommentLikes = async (commentId: string, user: string): Promise<void> => {
+    const ref = doc(db, "comments", commentId);
+    try {
+      await runTransaction(db, async (transaction) => {
+        const snap = await transaction.get(ref);
+        const likes = snap.data()?.likes as string[];
+
+        if (!likes.includes(user)) {
+          transaction.update(ref, { likes: arrayUnion(user) });
+          console.info("Liked comment", (commentId))
+        } else {
+          transaction.update(ref, { likes: arrayRemove(user) });
+          console.info("Unliked comment", (commentId))
+        }
+      });
+    } catch (e) {
+      console.error('Comment API error: ', e);
+    }
   };
 
   return {
     getCommentsByDugnad,
     postComment,
+    updateCommentLikes,
   };
+
 })();
+
 
 export default CommentService;

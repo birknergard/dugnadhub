@@ -1,11 +1,13 @@
+import { FontAwesome6 } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { TextButton } from "components/general/buttons";
 import { Spinner } from "components/general/spinner";
 import { colors, Column, Input, Label, PlainText, Row, SmallTitle } from "components/general/styledTags";
 import useToast from "hooks/useToast";
-import { Comment } from "models/dugnad";
+import { Comment } from "models/comment";
 import { useAuthSession } from "providers/authSessionProvider";
 import { useEffect, useState } from "react";
+import { Pressable } from "react-native";
 import Toast from "react-native-toast-message";
 import CommentService from "services/commentService";
 import UserService from "services/userService";
@@ -25,7 +27,8 @@ export default function CommentSection({ dugnadId }: { dugnadId: string }) {
         console.error('Error: Could not fetch comments:', e)
         return [];
       }
-    }
+    },
+    enabled: true
   })
 
   const [userComment, setUserComment] = useState('');
@@ -63,6 +66,13 @@ export default function CommentSection({ dugnadId }: { dugnadId: string }) {
       {comments!.map((comment, i) => (
         <CommentBody key={i}>
           <PlainText>{comment.comment}</PlainText>
+          <Pressable onPress={async () => {
+            await CommentService.updateCommentLikes(comment.id!, auth.user!.email!);
+            refetch();
+          }}>
+            <FontAwesome6 name='thumbs-up' size={25} />
+            <PlainText>{comment.likes.length}</PlainText>
+          </Pressable>
         </CommentBody>
       ))}
       <Label>Legg igjen kommentar</Label>
@@ -86,4 +96,4 @@ export default function CommentSection({ dugnadId }: { dugnadId: string }) {
 const Body = styled(Column)({
   alignSelf: 'stretch'
 })
-const CommentBody = styled(Column)({})
+const CommentBody = styled(Row)({})
