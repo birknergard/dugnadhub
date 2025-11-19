@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { TextButton } from "components/general/buttons";
 import { Spinner } from "components/general/spinner";
 import { colors, Column, Input, Label, PlainText, Row, SmallTitle } from "components/general/styledTags";
+import useToast from "hooks/useToast";
 import { Comment } from "models/dugnad";
 import { useAuthSession } from "providers/authSessionProvider";
 import { useEffect, useState } from "react";
@@ -12,7 +13,7 @@ import styled from "styled-components/native";
 
 export default function CommentSection({ dugnadId }: { dugnadId: string }) {
   const auth = useAuthSession();
-  const [errorMessage, setErrorMessage] = useState('')
+  const { toastError, toastSuccess } = useToast();
 
   const { data: comments, isLoading, refetch } = useQuery({
     queryKey: ['allComments'],
@@ -29,27 +30,20 @@ export default function CommentSection({ dugnadId }: { dugnadId: string }) {
 
   const [userComment, setUserComment] = useState('');
   const addComment = async () => {
-    const status = await CommentService.postComment(userComment, dugnadId, auth.user!.email!)
+    const status = await CommentService.postComment(
+      userComment,
+      dugnadId,
+      auth.user!.email!,
+      auth.userInfo!.username
+    )
     if (!status) {
-      setErrorMessage('Feil: kunne ikke publisere kommentar');
+      toastError('Feil: kunne ikke publisere kommentar');
       return;
     }
     setUserComment('');
-    Toast.show({
-      type: 'success',
-      text1: 'Kommentaren er registrert'
-    });
+    toastSuccess('Kommentaren er registrert');
     refetch();
   }
-
-  useEffect(() => {
-    if (errorMessage) {
-      Toast.show({
-        type: 'error',
-        text1: errorMessage
-      });
-    }
-  }, [errorMessage])
 
   if (isLoading) return (
     <Body>

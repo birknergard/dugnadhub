@@ -1,31 +1,12 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import { useQuery } from "@tanstack/react-query";
-import { Spinner } from "components/general/spinner";
 import { colors, Column, ColumnPressable, PlainText, SmallTitle } from "components/general/styledTags";
 import { format } from "date-fns";
-import { getAuth } from "firebase/auth";
-import { auth } from "firebaseConfig";
-import UserInfo from "models/user";
 import { useAuthSession } from "providers/authSessionProvider";
-import { useEffect, useState } from "react";
 import { Image } from "react-native";
-import Toast from "react-native-toast-message";
-import UserService from "services/userService";
 import styled from "styled-components/native";
 
 export default function Profile() {
   const userSession = useAuthSession();
-
-  const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => {
-    if (errorMessage != '') {
-      Toast.show({
-        type: 'error',
-        text1: errorMessage
-      })
-    }
-  }, [errorMessage])
 
   if (!userSession.userInfo) return (
     <Main>

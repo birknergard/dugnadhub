@@ -6,19 +6,19 @@ import { Spinner } from 'components/general/spinner';
 import { colors, Column, Heading, Label, PlainText, Row, Title } from 'components/general/styledTags';
 import { format } from 'date-fns';
 import { useLocalSearchParams, useSearchParams } from 'expo-router/build/hooks';
-import useErrorToast from 'hooks/useToast';
+import useToast from 'hooks/useToast';
 import Dugnad, { getFormattedAddress } from 'models/dugnad';
 import { useAuthSession } from 'providers/authSessionProvider';
 import { useState } from 'react';
 import { Image, ScrollView, View } from 'react-native';
-import Toast from 'react-native-toast-message';
 import DugnadService from 'services/dugnadService';
 import styled from 'styled-components/native';
 
 export default function DugnadDetails({ }: {}) {
   const { id } = useLocalSearchParams();
   const userId = useAuthSession().user!.uid;
-  const printError = useErrorToast();
+
+  const { toastSuccess, toastError } = useToast();
 
   const { data: dugnad, isLoading, refetch } = useQuery({
     queryKey: ['dugnadDetails', id],
@@ -32,12 +32,10 @@ export default function DugnadDetails({ }: {}) {
     await DugnadService.removeVolunteerFromDugnad(userId, dugnad!.id!)
       .then(r => {
         if (r) {
-          Toast.show({
-            type: 'success',
-            text1: `Du er avmeldt dugnaden ${dugnad!.title}`
-          })
+          toastSuccess(`Du er avmeldt dugnaden ${dugnad!.title}`);
+          return;
         }
-        printError(`Feil: kunne ikke melde deg av dugnaden ${dugnad!.title}`);
+        toastError(`Feil: kunne ikke melde deg av dugnaden ${dugnad!.title}`);
       });
     refetch();
   }
@@ -45,12 +43,10 @@ export default function DugnadDetails({ }: {}) {
     await DugnadService.registerVolunteerOnDugnad(userId, dugnad!.id!)
       .then(r => {
         if (r) {
-          Toast.show({
-            type: 'success',
-            text1: `Du er påmeldt på dugnaden ${dugnad!.title}`
-          })
+          toastSuccess(`Du er påmeldt på dugnaden ${dugnad!.title}`);
+          return
         }
-        printError(`Feil: kunne ikke melde deg av ${dugnad!.title}`);
+        toastError(`Feil: kunne ikke melde deg av ${dugnad!.title}`);
       });
     refetch();
   }
@@ -116,50 +112,3 @@ const Body = styled(Column)({
   gap: 50,
   marginBottom: 100
 })
-
-const Header = styled(Column)({
-  alignSelf: 'stretch',
-})
-
-const Section = styled(Column)({
-  alignSelf: 'stretch',
-  gap: 10,
-  backgroundColor: colors.yellow,
-  padding: 10,
-  borderColor: colors.white,
-  borderRadius: 15,
-  borderWidth: 2,
-})
-
-const ImageSection = styled(Column)({
-  alignSelf: 'stretch',
-  borderColor: colors.white,
-  borderRadius: 15,
-  borderWidth: 2,
-  backgroundColor: colors.yellow,
-})
-
-const DescriptionField = styled(Column)({
-  alignSelf: 'stretch',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: 10,
-  borderColor: colors.white,
-  borderBottomWidth: 2,
-})
-
-const StyledImage = styled.Image({
-  alignSelf: 'stretch',
-  height: 300,
-  borderBottomRightRadius: 15,
-  borderBottomLeftRadius: 15,
-})
-
-const ImageButtons = styled(Row)({
-  alignSelf: 'stretch',
-  justifyContent: 'space-between',
-  paddingLeft: 50,
-  paddingRight: 50,
-})
-
-const VolunteerButton = styled(TextButton)({})

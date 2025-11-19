@@ -1,12 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import DugnadItem from 'components/browse/dugnadItem';
-import { TextButton } from 'components/general/buttons';
 import { Spinner } from 'components/general/spinner';
-import { Column, Input, PlainText, SmallTitle, Title } from 'components/general/styledTags';
+import { Column, Input, PlainText } from 'components/general/styledTags';
 import { useFocusEffect } from 'expo-router';
 import Dugnad, { getFormattedAddress } from 'models/dugnad';
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { FlatList } from 'react-native';
 import Toast from 'react-native-toast-message';
 import DugnadService from 'services/dugnadService';
 import styled from 'styled-components/native';
@@ -101,10 +100,6 @@ const Main = styled.View({
   justifyContent: 'space-between',
   alignItems: 'stretch'
 });
-
-const DugnadList = styled(FlatList)({
-  gap: 10,
-})
 
 const SearchField = styled(Column)({
   alignItems: 'flex-start'

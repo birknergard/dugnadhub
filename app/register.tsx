@@ -7,6 +7,7 @@ import { TextButton } from "components/general/buttons";
 import { colors, Label, PlainText } from "components/general/styledTags";
 import { useRouter } from "expo-router";
 import UserService from "services/userService";
+import useToast from "hooks/useToast";
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Register() {
@@ -18,7 +19,7 @@ export default function Register() {
   const [verifiedPassword, setVerifiedPassword] = useState('');
   const [username, setUsername] = useState('');
 
-  const [errorMessage, setErrorMessage] = useState('');
+  const { toastError, toastSuccess } = useToast();
 
   // Split the mail like below then chech each substring if they exist
   // <at[0]>@<dot[0]>.<dot[1]>
@@ -38,44 +39,39 @@ export default function Register() {
     return true;
   }
 
-  const register = async (): Promise<string> => {
+  const register = async () => {
     if (firstName.length < 2) {
-      return 'Ugyldig fornavn. må være minst 2 bokstaver';
+      toastError('Ugyldig fornavn. må være minst 2 bokstaver')
     }
 
     if (lastName.length < 3) {
-      return 'Ugyldig etternavn. Må være minst 3 bokstaver'
+      toastError('Ugyldig etternavn. Må være minst 3 bokstaver');
     }
 
     if (!verifyEmail(email)) {
-      return 'Ugyldig epost.';
+      toastError('Ugyldig epost.');
     }
 
     if (password.length < 5) {
-      return 'Ditt passord må være minst 5 karakterer';
+      toastError('Ditt passord må være minst 5 karakterer');
     }
 
     if (password !== verifiedPassword) {
-      return 'Passordene må være like';
+      toastError('Passordene må være like');
     }
 
     if (username.length < 3) {
-      return 'Ditt brukernavn må være minst 3 karakterer';
+      toastError('Ditt brukernavn må være minst 3 karakterer');
     }
 
     try {
       await signUp(firstName, lastName, email, username, password);
-      return '';
+      toastSuccess(`Vellykket registrering. Logger inn som ${username}`);
     } catch (e) {
       console.error('Failed to create user: ', e);
-      return 'Feil: Kunne ikke lage bruker.';
+      toastError('Feil: Kunne ikke lage bruker.');
     }
   }
-
-  // Resets error message on change of fields 
-  useEffect(() => {
-    setErrorMessage('');
-  }, [firstName, lastName, email, password, verifiedPassword, username])
 
   return (
     <View className={s.mainContainer}>
@@ -138,8 +134,6 @@ export default function Register() {
         />
       </View>
 
-      <Text className={s.error}>{errorMessage}</Text>
-
       <View className={s.buttonContainer}>
         <TextButton
           color={colors.yellow}
@@ -154,8 +148,7 @@ export default function Register() {
           iconName=''
           iconPosition=''
           onTap={async () => {
-            const status = await register()
-            setErrorMessage(status);
+            await register()
           }}
         />
       </View>

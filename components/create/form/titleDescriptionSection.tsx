@@ -1,5 +1,6 @@
 import { IconButton, TextButton } from 'components/general/buttons';
 import { colors, Column, Input, Label, PlainText, Row } from 'components/general/styledTags';
+import useToast from 'hooks/useToast';
 import { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -22,11 +23,11 @@ export default function TitleAndDescriptionSelection({
 }) {
 
   const [task, setTask] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const { toastError } = useToast();
 
   const addTask = () => {
     if (task.length < 4) {
-      setErrorMessage('Arbeidsoppgave må ha minst 4 bokstaver.');
+      toastError('Arbeidsoppgave må ha minst 4 bokstaver.');
       return;
     }
     setTaskList([...taskList, task]);
@@ -40,13 +41,6 @@ export default function TitleAndDescriptionSelection({
     ];
     setTaskList(newList);
   }
-
-  useEffect(() => {
-    if (errorMessage !== '') Toast.show({
-      type: 'error',
-      text1: errorMessage
-    });
-  }, [errorMessage])
 
   return (
     <>

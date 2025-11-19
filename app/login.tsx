@@ -5,6 +5,7 @@ import { useAuthSession } from "providers/authSessionProvider";
 import { TextButton } from "components/general/buttons";
 import { useRouter } from "expo-router";
 import { colors } from "components/general/styledTags";
+import useToast from "hooks/useToast";
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
@@ -15,19 +16,15 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [errorMessage, setErrorMessage] = useState('');
+    const { toastError } = useToast();
 
     const login = async () => {
         try {
             signIn(email, password);
         } catch (error: any) {
-            return `Kunne ikke logge inn:\\n${error}`;
+            toastError(`Kunne ikke logge inn:\\n${error}`);
         }
     }
-
-    useEffect(() => {
-        setErrorMessage('');
-    }, [email, password])
 
     return (
         <View className={s.mainContainer}>
@@ -68,7 +65,6 @@ export default function Login() {
                     onTap={() => router.push('register')}
                 />
             </View>
-            <Text className={s.label}>{errorMessage}</Text>
         </View>
     );
 }

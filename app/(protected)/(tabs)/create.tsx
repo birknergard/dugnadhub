@@ -3,24 +3,22 @@ import StepIndicator from 'components/create/stepIndicator';
 import { TextButton } from 'components/general/buttons';
 import { Column, Row, Title, PlainText, colors } from 'components/general/styledTags';
 import * as datefns from 'date-fns';
-import Dugnad, { categories, Category } from 'models/dugnad';
+import Dugnad, { Category } from 'models/dugnad';
 import { useEffect, useRef, useState } from 'react';
 import CategorySelection from 'components/create/form/categorySection';
 import { View } from 'react-native';
 import DugnadService from 'services/dugnadService';
-import StorageService from 'services/storageService';
 import styled from 'styled-components/native';
 import TitleAndDescriptionSelection from 'components/create/form/titleDescriptionSection';
 import PlaceSelection from 'components/create/form/placeSection';
 import DateAndTimeSelection from 'components/create/form/dateTimeSection';
 import PersonsSelection from 'components/create/form/personSection';
 import ImageUpload from 'components/create/form/imageSection';
-import { auth, getStorageReference } from 'firebaseConfig';
 import { useAuthSession } from 'providers/authSessionProvider';
 import { router } from 'expo-router';
-import Toast from 'react-native-toast-message';
 import { Timestamp } from 'firebase/firestore';
 import { createConstants } from 'constants/createConstants';
+import useToast from 'hooks/useToast';
 
 export default function Create() {
   const userId = useAuthSession().user?.uid ?? 'unknown user';
@@ -48,7 +46,7 @@ export default function Create() {
 
   const [images, setImages] = useState<string[]>([]);
 
-  const [errorMessage, setErrorMessage] = useState('');
+  const { toastError, toastSuccess } = useToast();
 
   const createDugnadObject = (preview?: boolean): Dugnad => {
     return {
@@ -77,7 +75,7 @@ export default function Create() {
     // Handle post
     const request = await DugnadService.postDugnad(dugnad, images);
     if (!request) {
-      return setErrorMessage('Feil: Kunne ikke lage dugnad.')
+      return toastError('Feil: Kunne ikke lage dugnad.')
     }
 
     // Reset all state
@@ -98,10 +96,7 @@ export default function Create() {
     setImages([]);
 
     // Navigate away with message
-    Toast.show({
-      type: 'success',
-      text1: `Lagde ny dugnadsarrangement: ${title}!`
-    })
+    toastSuccess(`Lagde ny dugnadsarrangement: ${title}!`);
     router.navigate('/')
   };
 
@@ -130,13 +125,13 @@ export default function Create() {
     }
 
     if (datefns.isToday(dateTime)) {
-      setErrorMessage('Ugyldig dato, kan ikke være samme dag');
+      toastError('Ugyldig dato, kan ikke være samme dag');
       setValidSteps(3);
       return;
     }
 
     if (!datefns.isFuture(dateTime)) {
-      setErrorMessage('Ugyldig dato, må være frem i tid.');
+      toastError('Ugyldig dato, må være frem i tid.');
       setValidSteps(3);
       return;
     }
@@ -144,15 +139,6 @@ export default function Create() {
     if (!validateStep(4, dateTime !== null && duration > 0)) return;
     if (!validateStep(5, people > 0, 7)) return;
   }, [category, title, description, taskList, address, postcode, city, dateTime, duration, people])
-
-  useEffect(() => {
-    if (errorMessage !== '') {
-      Toast.show({
-        type: 'error',
-        text1: errorMessage
-      })
-    }
-  }, [errorMessage])
 
   const SectionList = [
     <CategorySelection selected={category} onCategorySelect={setCategory} />,
