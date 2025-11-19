@@ -1,14 +1,14 @@
 import { colors, Column, Heading, Label, PlainText, Row } from "components/general/styledTags";
-import { StyleSheet, Text } from "react-native";
+import { FlatList, Image, StyleSheet, Text } from "react-native";
 import { CameraView } from "expo-camera";
 import { launchImageLibraryAsync, MediaTypeOptions, useCameraPermissions } from "expo-image-picker";
 import { useEffect, useRef, useState } from "react";
 import { IconButton, TextButton } from "components/general/buttons";
 import styled from "styled-components/native";
 
-export default function ImageUpload({ images, onImageAdd, setShowUI }: {
+export default function ImageUpload({ images, setImages, setShowUI }: {
   images: string[],
-  onImageAdd: (images: string[]) => void
+  setImages: (images: string[]) => void
   setShowUI: (boolean: any) => void
 }) {
   const cameraRef = useRef<CameraView | null>(null)
@@ -18,7 +18,7 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
   const captureImage = async () => {
     const photo = await cameraRef.current?.takePictureAsync();
     if (photo?.uri) {
-      onImageAdd([...images, photo.uri]);
+      setImages([...images, photo.uri]);
       setMode(null);
       setShowUI(true)
     }
@@ -35,10 +35,19 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
 
     if (!result.canceled) {
       const uris = result.assets.map((a) => a.uri);
-      onImageAdd([...images, ...uris]);
+      setImages([...images, ...uris]);
       setMode(null);
     };
   }
+
+  const removeImage = (taskIndex: number) => {
+    const newList = [
+      ...images.slice(0, taskIndex),
+      ...images.slice(taskIndex + 1)
+    ];
+    setImages(newList);
+  }
+
 
   if (mode === 'camera') return (
     <Column>
@@ -68,7 +77,7 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
   );
 
   return (
-    <StyledColumn>
+    <>
       <StyledLabel>Last opp bilder relevant for dugnaden</StyledLabel>
       <TextButton
         color={colors.yellow}
@@ -91,7 +100,32 @@ export default function ImageUpload({ images, onImageAdd, setShowUI }: {
         iconPosition='left'
       />
       <StyledLabel>Bilder lastet opp: {images.length}</StyledLabel>
-    </StyledColumn>
+      <ImageListColumn>
+        <FlatList
+          style={{ alignSelf: 'stretch', flexGrow: 1 }}
+          contentContainerStyle={{ gap: 30 }}
+          data={images}
+          keyExtractor={(item, i) => item + i}
+          renderItem={({ item, index }) => (
+            <ImageListItem>
+              <Image source={{ uri: item }} style={{
+                alignSelf: 'stretch',
+                margin: 5,
+                marginBottom: 0,
+                height: 300,
+              }} />
+              <TextButton
+                color={colors.red}
+                text='Slett'
+                iconPosition='left'
+                iconName=''
+                onTap={() => removeImage(index)}
+              />
+            </ImageListItem>
+          )}
+        />
+      </ImageListColumn>
+    </>
   );
 }
 
@@ -115,6 +149,20 @@ const StyledLabel = styled(Label)({
   textAlign: 'center'
 })
 
-const StyledColumn = styled(Column)({
-  gap: 15
+const ImageListColumn = styled(Column)({
+  flex: 1,
+  alignSelf: 'stretch',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderWidth: 2,
+  borderRadius: 15,
+  padding: 10,
+  borderColor: colors.black,
+  backgroundColor: colors.white,
 })
+
+const ImageListItem = styled(Column)({
+  marginTop: 10,
+  alignSelf: 'stretch',
+})
+

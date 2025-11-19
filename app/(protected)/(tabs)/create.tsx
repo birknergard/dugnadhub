@@ -178,7 +178,7 @@ export default function Create() {
       setDuration={setDuration}
     />,
     <PersonsSelection people={people} onPeopleChange={setPeople} />,
-    <ImageUpload images={images} onImageAdd={setImages} setShowUI={setShowUI} />,
+    <ImageUpload images={images} setImages={setImages} setShowUI={setShowUI} />,
   ];
 
   return (
