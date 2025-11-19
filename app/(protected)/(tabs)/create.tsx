@@ -35,6 +35,7 @@ export default function Create() {
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [taskList, setTaskList] = useState<string[]>([]);
 
   const [address, setAddress] = useState('');
   const [postcode, setPostcode] = useState('');
@@ -80,6 +81,7 @@ export default function Create() {
     setCategory(null);
     setTitle('');
     setDescription('');
+    setTaskList([]);
     setAddress('');
     setPostcode('');
     setCity('');
@@ -114,7 +116,7 @@ export default function Create() {
   // Handles input validation for all steps
   useEffect(() => {
     if (!validateStep(1, category !== null)) return;
-    if (!validateStep(2, title !== '' && description !== '')) return;
+    if (!validateStep(2, title !== '' && description !== '' && taskList.length > 0)) return;
     if (!validateStep(3, address !== '' && postcode.length === 4 && city !== '')) return;
     if (step < 4 || !dateTime) {
       return
@@ -134,7 +136,7 @@ export default function Create() {
 
     if (!validateStep(4, dateTime !== null && duration > 0)) return;
     if (!validateStep(5, people > 0, 7)) return;
-  }, [category, title, description, address, postcode, city, dateTime, duration, people])
+  }, [category, title, description, taskList, address, postcode, city, dateTime, duration, people])
 
   useEffect(() => {
     if (errorMessage !== '') {
@@ -152,6 +154,8 @@ export default function Create() {
       onChangeTitle={setTitle}
       description={description}
       onChangeDescription={setDescription}
+      taskList={taskList}
+      setTaskList={setTaskList}
     />,
     <PlaceSelection
       address={address}
