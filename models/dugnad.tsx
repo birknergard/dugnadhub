@@ -23,6 +23,7 @@ export interface Comment {
   comment: string
   dugnadId: string,
   userId: string,
+  userEmail: string,
   dateCreated: Timestamp
 }
 

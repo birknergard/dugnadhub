@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import CommentSection from 'components/details/commentSection';
 import { IconButton, TextButton } from 'components/general/buttons';
 import DugnadView from 'components/general/dugnadView';
 import { Spinner } from 'components/general/spinner';
@@ -88,6 +89,7 @@ export default function DugnadDetails({ }: {}) {
                 }}
               />
             )}
+            <CommentSection dugnadId={dugnad.id!} />
           </Body>
         </ScrollView>
       )

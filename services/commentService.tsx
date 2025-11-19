@@ -2,7 +2,7 @@ import { collection, doc, getDocs, query, setDoc, Timestamp, where } from 'fireb
 import { db } from 'firebaseConfig';
 import { Comment } from 'models/dugnad';
 
-const UserService = (() => {
+const CommentService = (() => {
   const getCommentsByDugnad = async (dugnadId: string): Promise<Comment[]> => {
     const q = query(
       collection(db, 'comments'),
@@ -50,4 +50,4 @@ const UserService = (() => {
   };
 })();
 
-export default UserService;
+export default CommentService;
