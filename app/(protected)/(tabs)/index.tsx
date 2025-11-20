@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import DugnadItem from 'components/browse/dugnadItem';
 import { Spinner } from 'components/general/spinner';
-import { Column, Input, PlainText } from 'components/general/styledTags';
+import { Column, Input, Label, PlainText } from 'components/general/styledTags';
 import { useFocusEffect } from 'expo-router';
 import Dugnad, { getFormattedAddress } from 'models/dugnad';
 import { useCallback, useEffect, useState } from 'react';
@@ -38,7 +38,7 @@ export default function Home() {
   const getFilteredList = (source: Dugnad[], searchQuery: string): Dugnad[] => {
     const query = searchQuery.toLowerCase();
     return source.filter(dugnad => {
-      const base = dugnad.title + getFormattedAddress(dugnad).toLowerCase()
+      const base = (dugnad.title + '' + getFormattedAddress(dugnad)).toLowerCase()
       return base.includes(query);
     });
   }
@@ -71,7 +71,7 @@ export default function Home() {
         data={displayList}
         renderItem={dugnad => <DugnadItem showImage={true} dugnad={dugnad.item} />}
         keyExtractor={item => item.id!}
-        contentContainerStyle={{ gap: 20 }}
+        contentContainerStyle={{ gap: 20, paddingLeft: 20, paddingRight: 20 }}
         style={{ marginTop: 30 }}
       />
       <SearchField>
@@ -86,19 +86,17 @@ export default function Home() {
     </Main>
   );
 }
+
 const Load = styled(Column)({
   flex: 1
 })
 
-
 const Main = styled.View({
   flex: 1,
   backgroundColor: '#e4e3d5',
-  padding: 20,
-  paddingBottom: 50,
-  gap: 30,
+  paddingBottom: 20,
   flexDirection: 'column',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-start',
   alignItems: 'stretch'
 });
 
@@ -106,7 +104,7 @@ const SearchField = styled(Column)({
   alignItems: 'flex-start'
 })
 
-const SearchNote = styled(PlainText)({
+const SearchNote = styled(Label)({
   color: '#555555',
   marginLeft: 8,
 })

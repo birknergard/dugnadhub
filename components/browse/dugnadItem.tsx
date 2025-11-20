@@ -7,16 +7,17 @@ import styled from "styled-components/native";
 
 export default function DugnadItem({ dugnad, showImage }: { dugnad: Dugnad, showImage?: boolean }) {
   const router = useRouter();
+  const isFull = dugnad.requiredPersons <= dugnad.signedUp.length;
 
   return (
-    <Main $isFull={dugnad.requiredPersons <= dugnad.signedUp.length} onPress={() => {
+    <Main $isFull={isFull} onPress={() => {
       router.navigate({
         pathname: '/dugnadDetails/[id]',
         params: { id: dugnad.id }
       })
     }}>
 
-      {(showImage && dugnad.images.length > 0) &&
+      {(!isFull && showImage && dugnad.images.length > 0) &&
         <ImageSection>
           <StyledImage source={{ uri: dugnad.images[0] }} />
         </ImageSection>
@@ -38,7 +39,7 @@ export default function DugnadItem({ dugnad, showImage }: { dugnad: Dugnad, show
 }
 
 const Main = styled(ColumnPressable)<{ $isFull: boolean }>(props => ({
-  backgroundColor: props.$isFull ? colors.red : colors.green,
+  backgroundColor: props.$isFull ? colors.yellow : colors.green,
   alignSelf: 'stretch',
   justifyContent: 'space-between',
 
@@ -73,7 +74,7 @@ const ImageSection = styled(Column)({
 
 const StyledImage = styled.Image({
   alignSelf: 'stretch',
-  height: 200,
+  height: 300,
   borderTopLeftRadius: 15,
   borderTopRightRadius: 15,
 })

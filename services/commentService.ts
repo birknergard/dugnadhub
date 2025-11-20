@@ -1,6 +1,7 @@
 import { arrayRemove, arrayUnion, collection, doc, getDocs, query, runTransaction, setDoc, Timestamp, updateDoc, where } from 'firebase/firestore';
 import { db } from 'firebaseConfig';
 import { Comment } from 'models/comment';
+import UserService from './userService';
 
 const CommentService = (() => {
   const getCommentsByDugnad = async (dugnadId: string): Promise<Comment[]> => {
@@ -22,30 +23,32 @@ const CommentService = (() => {
     comment: string,
     dugnadId: string,
     userId: string,
-    username: string,
   ): Promise<boolean> => {
     // Gets a unique id and creates a doc on that id
-    const commentId = doc(collection(db, 'comments')).id;
-    const ref = doc(collection(db, 'comments'), commentId);
+    try {
+      const commentId = doc(collection(db, 'comments')).id;
+      const refComment = doc(collection(db, 'comments'), commentId);
 
-    // Gets a unique id and creates a doc on that id
-    return await setDoc(ref, {
-      id: commentId,
-      comment: comment,
-      dugnadId: dugnadId,
-      userId: userId,
-      username: username,
-      likes: [],
-      dateCreated: Timestamp.now(),
-    } as Comment)
-      .then((r) => {
-        console.info("Created comment: ", (userId))
-        return true;
-      })
-      .catch((e) => {
-        console.error('Comment API error: ', e);
-        return false;
-      });
+      const username = await UserService.getUser(userId)
+        .then(r => r?.username);
+      // Gets a unique id and creates a doc on that id
+      await setDoc(refComment, {
+        id: commentId,
+        comment: comment,
+        dugnadId: dugnadId,
+        userId: userId,
+        username: username,
+        likes: [],
+        dateCreated: Timestamp.now(),
+      } as Comment)
+
+      console.info("Created comment: ", (userId))
+      return true;
+    }
+    catch (e) {
+      console.error('Comment API error: ', e);
+      return false;
+    };
   };
 
   const updateCommentLikes = async (commentId: string, user: string): Promise<void> => {

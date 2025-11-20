@@ -37,7 +37,6 @@ export default function CommentSection({ dugnadId }: { dugnadId: string }) {
       userComment,
       dugnadId,
       auth.user!.email!,
-      auth.userInfo!.username
     )
     if (!status) {
       toastError('Feil: kunne ikke publisere kommentar');

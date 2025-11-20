@@ -14,11 +14,44 @@ export default function DugnadView({ dugnad, preview }: { dugnad: Dugnad, previe
     <Body>
       <Header>
         <SmallTitle>{dugnad.title}</SmallTitle>
-        <Row>
+        <CategoryRow>
           <Heading>{dugnad.category}</Heading>
           <FontAwesome6 name={getDugnadCategory(dugnad)!.iconName} size={25} />
-        </Row>
+        </CategoryRow>
       </Header>
+      <ImageSection>
+        {dugnad.images.length > 0 &&
+          <StyledImage source={{ uri: dugnad.images[currentImage] }} resizeMode='cover' />
+        }
+      </ImageSection>
+      {dugnad.images.length > 0 &&
+        <ImageButtons>
+          {(0 < currentImage && currentImage <= dugnad.images.length - 1) &&
+            <TextButton
+              color={colors.beige}
+              text='Forrige bilde'
+              iconName='caret-left'
+              iconPosition='right'
+              onTap={() => {
+                setCurrentImage(currentImage - 1)
+              }}
+            />
+          }
+          <View style={{ flexGrow: 1 }} />
+          {(0 <= currentImage && currentImage < dugnad.images.length - 1) &&
+            <TextButton
+              color={colors.beige}
+              text='Neste bilde'
+              iconName='caret-right'
+              iconPosition='left'
+              onTap={() => {
+                setCurrentImage(currentImage + 1)
+              }}
+            />
+          }
+        </ImageButtons>
+      }
+
       <Column style={{
         gap: 5,
         padding: 10,
@@ -31,6 +64,7 @@ export default function DugnadView({ dugnad, preview }: { dugnad: Dugnad, previe
           <Heading>Beskrivelse</Heading>
           <PlainText>{dugnad.description.trimEnd()}</PlainText>
         </Section>
+
         <Section>
           <Row style={{ alignSelf: 'stretch', justifyContent: 'space-evenly' }}>
             <Column>
@@ -43,6 +77,7 @@ export default function DugnadView({ dugnad, preview }: { dugnad: Dugnad, previe
             </Column>
           </Row>
         </Section>
+
         <Section>
           <Heading>Arbeidsoppgaver</Heading>
           <Column>
@@ -51,47 +86,19 @@ export default function DugnadView({ dugnad, preview }: { dugnad: Dugnad, previe
             ))}
           </Column>
         </Section>
+
         <Section>
           <Heading>Sted</Heading>
           <PlainText>{getFormattedAddress(dugnad)}</PlainText>
         </Section>
       </Column>
-      <ImageSection>
-        {dugnad.images.length > 0 &&
-          <StyledImage source={{ uri: dugnad.images[currentImage] }} resizeMode='cover' />
-        }
-      </ImageSection>
-      {dugnad.images.length > 0 &&
-        <ImageButtons>
-          {(0 < currentImage && currentImage <= dugnad.images.length - 1) &&
-            <TextButton
-              color={colors.beige}
-              text='Prev'
-              iconName='caret-left'
-              iconPosition='right'
-              onTap={() => {
-                setCurrentImage(currentImage - 1)
-              }}
-            />
-          }
-          <View style={{ flexGrow: 1 }} />
-          {(0 <= currentImage && currentImage < dugnad.images.length - 1) &&
-            <TextButton
-              color={colors.beige}
-              text='Next'
-              iconName='caret-right'
-              iconPosition='left'
-              onTap={() => {
-                setCurrentImage(currentImage + 1)
-              }}
-            />
-          }
-        </ImageButtons>
+
+      {!preview &&
+        <Section>
+          <Heading>Påmeldte</Heading>
+          <Title>{`${dugnad.signedUp.length} av ${dugnad.requiredPersons}`}</Title>
+        </Section>
       }
-      <Section>
-        <Heading>Påmeldte</Heading>
-        <Title>{`${dugnad.signedUp.length} av ${dugnad.requiredPersons}`}</Title>
-      </Section>
     </Body>
   );
 }
@@ -104,6 +111,10 @@ const Body = styled(Column)({
 
 const Header = styled(Column)({
   alignSelf: 'stretch',
+})
+
+const CategoryRow = styled(Row)({
+  gap: 10,
 })
 
 const Section = styled(Column)({
