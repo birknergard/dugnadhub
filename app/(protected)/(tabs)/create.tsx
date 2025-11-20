@@ -21,7 +21,7 @@ import { createConstants } from 'constants/createConstants';
 import useToast from 'hooks/useToast';
 
 export default function Create() {
-  const userId = useAuthSession().user?.uid ?? 'unknown user';
+  const userId = useAuthSession().user?.email ?? 'unknown user';
 
   const [step, setStep] = useState(1);
   const [isShowingUI, setShowUI] = useState(true);
@@ -63,8 +63,6 @@ export default function Create() {
       images: preview ? images : [],
       ownerId: userId, // Attach user id from current auth session
       signedUp: [],
-      commments: [],
-      likedBy: [],
     }
   }
 
@@ -73,11 +71,10 @@ export default function Create() {
     const dugnad: Dugnad = createDugnadObject();
 
     // Handle post
-    const request = await DugnadService.postDugnad(dugnad, images);
-    if (!request) {
+    const submitRequest = await DugnadService.postDugnad(userId, dugnad, images);
+    if (!submitRequest) {
       return toastError('Feil: Kunne ikke lage dugnad.')
     }
-
     // Reset all state
     setStep(1);
     setValidSteps(0);

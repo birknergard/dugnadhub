@@ -1,17 +1,3 @@
-type AddressComponent = {
-  long_name: string;
-  short_name: string;
-  types: string[];
-};
-
-type GeocodeResult = {
-  address_components: AddressComponent[];
-  formatted_address: string;
-  geometry: any;
-  place_id: string;
-  postcode_localities: string[];
-  types: string[];
-};
 const GeocodingService = (() => {
   const BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json"
 

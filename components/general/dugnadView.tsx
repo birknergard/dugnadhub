@@ -31,7 +31,6 @@ export default function DugnadView({ dugnad, preview }: { dugnad: Dugnad, previe
           <Heading>Beskrivelse</Heading>
           <PlainText>{dugnad.description.trimEnd()}</PlainText>
         </Section>
-
         <Section>
           <Row style={{ alignSelf: 'stretch', justifyContent: 'space-evenly' }}>
             <Column>
@@ -40,22 +39,18 @@ export default function DugnadView({ dugnad, preview }: { dugnad: Dugnad, previe
             </Column>
             <Column>
               <Heading>Varighet</Heading>
-              <PlainText>
-                {`Fra ${format(dugnad.startDateTime.toDate(), "HH:mm")} til ${format(dugnad.endDateTime.toDate(), "HH:mm")}`}
-              </PlainText>
+              <PlainText>{`Fra ${format(dugnad.startDateTime.toDate(), "HH:mm")} til ${format(dugnad.endDateTime.toDate(), "HH:mm")}`}</PlainText>
             </Column>
           </Row>
         </Section>
-
         <Section>
           <Heading>Arbeidsoppgaver</Heading>
-          {dugnad.taskList.map((task, i) => (
-            <PlainText>
-              {i + 1}. {task}
-            </PlainText>
-          ))}
+          <Column>
+            {dugnad.taskList.map((task, i) => (
+              <PlainText key={i}>{`${i + 1}. ${task}`}</PlainText>
+            ))}
+          </Column>
         </Section>
-
         <Section>
           <Heading>Sted</Heading>
           <PlainText>{getFormattedAddress(dugnad)}</PlainText>
@@ -79,7 +74,7 @@ export default function DugnadView({ dugnad, preview }: { dugnad: Dugnad, previe
               }}
             />
           }
-          <View></View>
+          <View style={{ flexGrow: 1 }} />
           {(0 <= currentImage && currentImage < dugnad.images.length - 1) &&
             <TextButton
               color={colors.beige}
@@ -113,24 +108,12 @@ const Header = styled(Column)({
 
 const Section = styled(Column)({
   alignSelf: 'stretch',
-  //backgroundColor: colors.yellow,
-  //borderWidth: 2,
-  //borderRadius: 15,
   borderColor: colors.white,
   padding: 10,
 })
 
 const ImageSection = styled(Column)({
   alignSelf: 'stretch',
-})
-
-const DescriptionField = styled(Column)({
-  alignSelf: 'stretch',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: 10,
-  //borderColor: colors.white,
-  //borderBottomWidth: 2,
 })
 
 const StyledImage = styled.Image({

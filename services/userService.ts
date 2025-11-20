@@ -19,7 +19,6 @@ const UserService = (() => {
   };
 
   const postUser = async (
-    userId: string,
     firstName: string,
     lastName: string,
     email: string,
@@ -33,11 +32,10 @@ const UserService = (() => {
       username: username,
       volunteerFor: [],
       organizerFor: [],
-      picture: '',
       dateCreated: Timestamp.now(),
     })
       .then((r) => {
-        console.info("Created user: ", (userId))
+        console.info("Created user: ", (email))
         return true;
       })
       .catch((e) => {

@@ -1,8 +1,8 @@
-import { FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { TextButton } from "components/general/buttons";
 import { Spinner } from "components/general/spinner";
-import { colors, Column, Input, Label, PlainText, Row, SmallTitle } from "components/general/styledTags";
+import { colors, Column, ColumnPressable, Input, Label, PlainText, Row, SmallTitle } from "components/general/styledTags";
 import useToast from "hooks/useToast";
 import { Comment } from "models/comment";
 import { useAuthSession } from "providers/authSessionProvider";
@@ -62,20 +62,7 @@ export default function CommentSection({ dugnadId }: { dugnadId: string }) {
 
   return (
     <Body>
-      <SmallTitle>Comments</SmallTitle>
-      {comments!.map((comment, i) => (
-        <CommentBody key={i}>
-          <PlainText>{comment.comment}</PlainText>
-          <Pressable onPress={async () => {
-            await CommentService.updateCommentLikes(comment.id!, auth.user!.email!);
-            refetch();
-          }}>
-            <FontAwesome6 name='thumbs-up' size={25} />
-            <PlainText>{comment.likes.length}</PlainText>
-          </Pressable>
-        </CommentBody>
-      ))}
-      <Label>Legg igjen kommentar</Label>
+      <SmallTitle>Kommentarfelt</SmallTitle>
       <Row>
         <Input
           value={userComment}
@@ -89,6 +76,18 @@ export default function CommentSection({ dugnadId }: { dugnadId: string }) {
           onTap={async () => { await addComment() }}
         />
       </Row>
+      {comments!.map((comment, i) => (
+        <CommentBody key={i}>
+          <PlainText>{comment.comment}</PlainText>
+          <Pressable onPress={async () => {
+            await CommentService.updateCommentLikes(comment.id!, auth.user!.email!);
+            refetch();
+          }}>
+            <FontAwesome name='thumbs-up' size={35} color={comment.likes.includes(auth.user!.email!) ? colors.red : colors.black} />
+          </Pressable>
+          <PlainText>{comment.likes.length}</PlainText>
+        </CommentBody>
+      ))}
     </Body>
   );
 }

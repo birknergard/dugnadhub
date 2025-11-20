@@ -10,11 +10,12 @@ import UserService from "./userService";
 export const signIn = async (email: string, password: string) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const userInfo = await UserService.getUser(email);
     console.log("User signed in:", userCredential.user.email);
-    return userCredential.user; // optional: return the signed-in user
+    return userInfo;
   } catch (error: any) {
     console.error("Could not sign in", error.message);
-    throw error; // rethrow for UI to catch
+    throw error;
   }
 };
 
@@ -36,22 +37,20 @@ export const signUp = async (
   password: string
 ) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    await createUserWithEmailAndPassword(auth, email, password);
 
     if (auth.currentUser) {
       await updateProfile(auth.currentUser, {
         displayName: username,
       });
       await UserService.postUser(
-        userCredential.user.uid,
         firstName,
         lastName,
         email,
         username,
       )
+      return await UserService.getUser(email);
     }
-
-    return userCredential.user; // optional, return the user
   } catch (error: any) {
     console.error(`Signup error: ${error.code}, message: ${error.message}`);
     throw error; // rethrow so UI can handle it

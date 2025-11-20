@@ -16,7 +16,8 @@ import styled from 'styled-components/native';
 
 export default function DugnadDetails({ }: {}) {
   const { id } = useLocalSearchParams();
-  const userId = useAuthSession().user!.uid;
+  const userSession = useAuthSession();
+  const userId = userSession.user!.email!
 
   const { toastSuccess, toastError } = useToast();
 
@@ -67,7 +68,7 @@ export default function DugnadDetails({ }: {}) {
             <DugnadView dugnad={dugnad} />
             {dugnad.signedUp.includes(userId) ? (
               <TextButton
-                text='Meld deg på'
+                text='Meld deg av'
                 iconName=''
                 iconPosition=''
                 color={colors.red}
@@ -77,7 +78,7 @@ export default function DugnadDetails({ }: {}) {
               />
             ) : (
               <TextButton
-                text='Meld deg av'
+                text='Meld deg på'
                 iconName=''
                 iconPosition=''
                 color={colors.green}
@@ -89,8 +90,7 @@ export default function DugnadDetails({ }: {}) {
             <CommentSection dugnadId={dugnad.id!} />
           </Body>
         </ScrollView>
-      )
-      }
+      )}
     </Main >
   );
 }

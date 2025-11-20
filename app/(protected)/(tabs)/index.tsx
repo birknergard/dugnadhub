@@ -69,7 +69,7 @@ export default function Home() {
     <Main>
       <FlatList
         data={displayList}
-        renderItem={dugnad => <DugnadItem dugnad={dugnad.item} />}
+        renderItem={dugnad => <DugnadItem showImage={true} dugnad={dugnad.item} />}
         keyExtractor={item => item.id!}
         contentContainerStyle={{ gap: 20 }}
         style={{ marginTop: 30 }}
@@ -78,7 +78,8 @@ export default function Home() {
         <SearchInput
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholder='Søk ...'
+          placeholder='Søk på addresse, tittel ...'
+          keyboardType='default'
         />
         <SearchNote>{`${displayList.length} resultater`}</SearchNote>
       </SearchField>

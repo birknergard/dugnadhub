@@ -6,6 +6,5 @@ export default interface UserInfo {
   username: string,
   volunteerFor: string[],
   organizerFor: string[],
-  picture: string,
   dateCreated: Timestamp,
 }
