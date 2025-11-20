@@ -100,18 +100,22 @@ const DugnadService = (() => {
   }
 
   const removeVolunteerFromDugnad = async (userId: string, dugnadId: string): Promise<boolean> => {
-    const ref = doc(collection(db, 'dugnad'), dugnadId)
-    return await updateDoc(ref, {
-      signedUp: arrayRemove(userId)
-    })
-      .then((r) => {
-        console.info(`Added volunteer ${userId} to dugnad with id: ${r}`)
-        return true;
+    const refDugnad = doc(collection(db, 'dugnad'), dugnadId)
+    const refUser = doc(collection(db, 'users'), userId)
+    try {
+      await updateDoc(refDugnad, {
+        signedUp: arrayRemove(userId)
       })
-      .catch((e) => {
-        console.error('Dugnad API error: ', e);
-        return false;
+      await updateDoc(refUser, {
+        volunteerFor: arrayRemove(dugnadId)
       });
+
+      console.info(`Removed volunteer ${userId} from dugnad with id: ${dugnadId}`)
+      return true;
+    } catch (e) {
+      console.error('Dugnad API error: ', e);
+      return false;
+    };
   }
 
   return {
