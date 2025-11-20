@@ -20,9 +20,9 @@ export default function Login() {
 
     const login = async () => {
         try {
-            signIn(email, password);
+            await signIn(email, password);
         } catch (error: any) {
-            toastError(`Kunne ikke logge inn:\\n${error}`);
+            toastError(`Kunne ikke logge inn: ${error}`);
         }
     }
 

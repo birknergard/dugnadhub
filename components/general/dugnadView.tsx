@@ -1,14 +1,31 @@
 import Dugnad, { getDugnadCategory, getFormattedAddress } from "models/dugnad";
-import { colors, Column, Heading, PlainText, Row, SmallTitle, Title } from "./styledTags";
+import { colors, Column, Heading, Label, PlainText, Row, SmallTitle, Title } from "./styledTags";
 import styled from "styled-components/native";
 import { TextButton } from "./buttons";
 import { View } from "react-native";
 import { format } from "date-fns";
 import { useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
+import UserService from "services/userService";
+import UserInfo from "models/user";
 
 export default function DugnadView({ dugnad, preview }: { dugnad: Dugnad, preview?: boolean }) {
   const [currentImage, setCurrentImage] = useState(0);
+  const { data: volunteers, refetch } = useQuery({
+    queryKey: ['volunteers'],
+    queryFn: async (): Promise<UserInfo[]> => {
+      try {
+        const requests = dugnad.signedUp.map(userId => UserService.getUser(userId));
+        const results = await Promise.all(requests);
+
+        return results.filter(Boolean) as UserInfo[];
+      } catch (e: any) {
+        console.error("Could not fetch dugnads:", e);
+        return [];
+      }
+    }
+  })
 
   return (
     <Body>
@@ -66,7 +83,7 @@ export default function DugnadView({ dugnad, preview }: { dugnad: Dugnad, previe
         </Section>
 
         <Section>
-          <Row style={{ alignSelf: 'stretch', justifyContent: 'space-evenly' }}>
+          <Row style={{ alignSelf: 'stretch', justifyContent: 'space-between' }}>
             <Column>
               <Heading>Dato</Heading>
               <PlainText>{format(dugnad.startDateTime.toDate(), "dd MMMM yyyy")}</PlainText>
@@ -96,6 +113,11 @@ export default function DugnadView({ dugnad, preview }: { dugnad: Dugnad, previe
       {!preview &&
         <Section>
           <Heading>Påmeldte</Heading>
+          <Column>
+            {volunteers && volunteers.map(volunteer => (
+              <Label key={volunteer.dateCreated.valueOf()}>{`${volunteer.firstName} ${volunteer.lastName}`}</Label>
+            ))}
+          </Column>
           <Title>{`${dugnad.signedUp.length} av ${dugnad.requiredPersons}`}</Title>
         </Section>
       }

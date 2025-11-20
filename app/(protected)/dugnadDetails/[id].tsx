@@ -63,7 +63,7 @@ export default function DugnadDetails({ }: {}) {
       {!dugnad ? (
         <Label>Could not find dugnad</Label>
       ) : (
-        <ScrollView style={{ flex: 1, alignSelf: 'stretch', padding: 20 }}>
+        <ScrollView style={{ flex: 1, alignSelf: 'stretch' }}>
           <Body>
             <DugnadView dugnad={dugnad} />
             {dugnad.signedUp.includes(userId) ? (
@@ -106,9 +106,11 @@ const Main = styled.View({
   alignItems: 'center',
 });
 
+const StyledDugnadView = styled(DugnadView)({})
 
 const Body = styled(Column)({
   alignSelf: 'stretch',
+  flexGrow: 1,
   gap: 50,
   marginBottom: 100
 })

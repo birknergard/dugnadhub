@@ -2,15 +2,13 @@ import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { TextButton } from "components/general/buttons";
 import { Spinner } from "components/general/spinner";
-import { colors, Column, ColumnPressable, Input, Label, PlainText, Row, SmallTitle } from "components/general/styledTags";
+import { colors, Column, ColumnPressable, Input, Label, PlainText, Row, RowPressable, SmallTitle } from "components/general/styledTags";
+import { format } from "date-fns";
 import useToast from "hooks/useToast";
 import { Comment } from "models/comment";
 import { useAuthSession } from "providers/authSessionProvider";
-import { useEffect, useState } from "react";
-import { Pressable } from "react-native";
-import Toast from "react-native-toast-message";
+import { useState } from "react";
 import CommentService from "services/commentService";
-import UserService from "services/userService";
 import styled from "styled-components/native";
 
 export default function CommentSection({ dugnadId }: { dugnadId: string }) {
@@ -33,6 +31,10 @@ export default function CommentSection({ dugnadId }: { dugnadId: string }) {
 
   const [userComment, setUserComment] = useState('');
   const addComment = async () => {
+    if (userComment.length < 3) {
+      toastError('Kommentaren er for kort. Må være minst 3 bokstaver');
+      return;
+    }
     const status = await CommentService.postComment(
       userComment,
       dugnadId,
@@ -62,36 +64,109 @@ export default function CommentSection({ dugnadId }: { dugnadId: string }) {
   return (
     <Body>
       <SmallTitle>Kommentarfelt</SmallTitle>
-      <Row>
-        <Input
+      <InputRow>
+        <StyledInput
           value={userComment}
           onChangeText={setUserComment}
+          multiline
+          numberOfLines={3}
         />
-        <TextButton
-          text='Kommenter'
+        <StyledTextButton
+          text='Ok'
           color={colors.yellow}
           iconName=''
           iconPosition='left'
           onTap={async () => { await addComment() }}
         />
-      </Row>
-      {comments!.map((comment, i) => (
-        <CommentBody key={i}>
-          <PlainText>{comment.comment}</PlainText>
-          <Pressable onPress={async () => {
-            await CommentService.updateCommentLikes(comment.id!, auth.user!.email!);
-            refetch();
-          }}>
-            <FontAwesome name='thumbs-up' size={35} color={comment.likes.includes(auth.user!.email!) ? colors.red : colors.black} />
-          </Pressable>
-          <PlainText>{comment.likes.length}</PlainText>
-        </CommentBody>
-      ))}
+      </InputRow>
+      <CommentList>
+        {comments!.map((comment, i) => (
+          <CommentOuterBody key={i}>
+            <CommentBody>
+              <CommentData>
+                <UsernameText>{`${comment.username}`}</UsernameText>
+                <UsernameText>{format(comment.dateCreated.toDate(), "HH:mm - dd/MM/yy")}</UsernameText>
+              </CommentData>
+              <CommentText>{comment.comment}</CommentText>
+            </CommentBody>
+            <LikeButton onPress={async () => {
+              await CommentService.updateCommentLikes(comment.id!, auth.user!.email!);
+              refetch();
+            }}>
+              <FontAwesome name='thumbs-up' size={35} color={comment.likes.includes(auth.user!.email!) ? colors.red : colors.black} />
+              <Label>{comment.likes.length}</Label>
+            </LikeButton>
+          </CommentOuterBody>
+        ))}
+      </CommentList>
     </Body>
   );
 }
 
 const Body = styled(Column)({
-  alignSelf: 'stretch'
+  alignSelf: 'stretch',
+  flexGrow: 1,
+  gap: 10,
 })
-const CommentBody = styled(Row)({})
+
+const InputRow = styled(Row)({
+  flexGrow: 1,
+  gap: 5,
+})
+
+const StyledInput = styled(Input)({
+  flex: 1,
+})
+
+const StyledTextButton = styled(TextButton)({
+  width: 50,
+  alignSelf: 'center'
+})
+
+const CommentList = styled(Column)({
+  alignSelf: 'stretch',
+  flexGrow: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: 3
+})
+
+const CommentOuterBody = styled(Row)({
+  alignSelf: 'stretch',
+  flexGrow: 1,
+  justifyContent: 'space-between',
+  padding: 5,
+})
+
+const CommentBody = styled(Column)({
+  backgroundColor: colors.white,
+  flex: 1,
+  gap: 5,
+  padding: 10,
+  borderRadius: 15,
+  alignSelf: 'stretch',
+  justifyContent: 'space-between'
+})
+
+const CommentData = styled(Row)({
+  alignSelf: 'stretch',
+  alignItems: 'center',
+  justifyContent: 'space-between'
+})
+
+const UsernameText = styled(PlainText)({
+  textAlign: 'start',
+  fontSize: 20
+})
+
+const CommentText = styled(PlainText)({
+  alignSelf: 'stretch',
+  marginTop: 3,
+  fontSize: 18
+})
+
+const LikeButton = styled(RowPressable)({
+  paddingLeft: 10,
+  gap: 5,
+  width: 60,
+})

@@ -13,6 +13,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import useToast from "hooks/useToast";
 
 // Setting up tanstackquery, for better use of http calls
 const queryClient = new QueryClient();
@@ -49,6 +50,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
   const [userAuth, setUserAuth] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const { toastError } = useToast();
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -66,7 +68,8 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         signIn: async (userName: string, password: string) => {
-          await authService.signIn(userName, password);
+          await authService.signIn(userName, password)
+            .catch(e => toastError(`Kunne ikke logge inn. Feilmelding: ${e}`))
         },
         signOut: async () => {
           await authService.signOut();
