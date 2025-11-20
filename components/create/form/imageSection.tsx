@@ -103,7 +103,7 @@ export default function ImageUpload({ images, setImages, setShowUI }: {
       <ImageListColumn>
         <FlatList
           style={{ alignSelf: 'stretch', flexGrow: 1 }}
-          contentContainerStyle={{ gap: 30 }}
+          contentContainerStyle={{ gap: 20 }}
           data={images}
           keyExtractor={(item, i) => item + i}
           renderItem={({ item, index }) => (
@@ -112,7 +112,8 @@ export default function ImageUpload({ images, setImages, setShowUI }: {
                 alignSelf: 'stretch',
                 margin: 5,
                 marginBottom: 0,
-                height: 300,
+                borderRadius: 15,
+                height: 250,
               }} />
               <TextButton
                 color={colors.red}

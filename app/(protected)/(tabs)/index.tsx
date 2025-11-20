@@ -5,7 +5,7 @@ import { Column, Input, Label, PlainText } from 'components/general/styledTags';
 import { useFocusEffect } from 'expo-router';
 import Dugnad, { getFormattedAddress } from 'models/dugnad';
 import { useCallback, useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import DugnadService from 'services/dugnadService';
 import styled from 'styled-components/native';
@@ -67,13 +67,6 @@ export default function Home() {
 
   return (
     <Main>
-      <FlatList
-        data={displayList}
-        renderItem={dugnad => <DugnadItem showImage={true} dugnad={dugnad.item} />}
-        keyExtractor={item => item.id!}
-        contentContainerStyle={{ gap: 20, paddingLeft: 20, paddingRight: 20 }}
-        style={{ marginTop: 30 }}
-      />
       <SearchField>
         <SearchInput
           value={searchQuery}
@@ -83,6 +76,13 @@ export default function Home() {
         />
         <SearchNote>{`${displayList.length} resultater`}</SearchNote>
       </SearchField>
+      <FlatList
+        data={displayList}
+        renderItem={dugnad => <DugnadItem showImage={true} dugnad={dugnad.item} />}
+        keyExtractor={item => item.id!}
+        contentContainerStyle={{ gap: 20, paddingLeft: 20, paddingRight: 20 }}
+        style={{ marginTop: 30 }}
+      />
     </Main>
   );
 }
@@ -94,14 +94,15 @@ const Load = styled(Column)({
 const Main = styled.View({
   flex: 1,
   backgroundColor: '#e4e3d5',
-  paddingBottom: 20,
+  paddingTop: 30,
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'stretch'
 });
 
 const SearchField = styled(Column)({
-  alignItems: 'flex-start'
+  alignItems: 'flex-start',
+  padding: 5
 })
 
 const SearchNote = styled(Label)({

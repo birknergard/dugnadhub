@@ -41,7 +41,6 @@ export default function ProtectedLayout() {
       <Stack.Screen name='dugnadDetails/[id]' options={{
         headerBackButtonDisplayMode: 'generic',
         headerTitle: '',
-        headerTransparent: true,
       }} />
     </Stack>
   );

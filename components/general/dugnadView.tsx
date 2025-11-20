@@ -112,13 +112,13 @@ export default function DugnadView({ dugnad, preview }: { dugnad: Dugnad, previe
 
       {!preview &&
         <Section>
+          <Title>{`${dugnad.signedUp.length} av ${dugnad.requiredPersons}`}</Title>
           <Heading>Påmeldte</Heading>
           <Column>
             {volunteers && volunteers.map(volunteer => (
-              <Label key={volunteer.dateCreated.valueOf()}>{`${volunteer.firstName} ${volunteer.lastName}`}</Label>
+              <PlainText key={volunteer.dateCreated.valueOf()}>{`${volunteer.firstName} ${volunteer.lastName}`}</PlainText>
             ))}
           </Column>
-          <Title>{`${dugnad.signedUp.length} av ${dugnad.requiredPersons}`}</Title>
         </Section>
       }
     </Body>
@@ -128,6 +128,8 @@ export default function DugnadView({ dugnad, preview }: { dugnad: Dugnad, previe
 const Body = styled(Column)({
   flexGrow: 1,
   alignSelf: 'stretch',
+  paddingLeft: 10,
+  paddingRight: 10,
   gap: 20,
 })
 
@@ -160,6 +162,6 @@ const StyledImage = styled.Image({
 const ImageButtons = styled(Row)({
   alignSelf: 'stretch',
   justifyContent: 'space-between',
-  paddingLeft: 50,
-  paddingRight: 50,
+  paddingLeft: 5,
+  paddingRight: 5,
 })

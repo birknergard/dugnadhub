@@ -11,7 +11,7 @@ export default function DugnadItem({ dugnad, showImage }: { dugnad: Dugnad, show
 
   return (
     <Main $isFull={isFull} onPress={() => {
-      router.navigate({
+      router.push({
         pathname: '/dugnadDetails/[id]',
         params: { id: dugnad.id }
       })

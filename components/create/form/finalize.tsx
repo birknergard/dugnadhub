@@ -11,7 +11,7 @@ export default function Finalize({ dugnad }: { dugnad: Dugnad }) {
   return (
     <PreviewContainer>
       <StyledScrollView>
-        <DugnadView dugnad={dugnad} />
+        <DugnadView dugnad={dugnad} preview={true} />
       </StyledScrollView>
     </PreviewContainer>
   );

@@ -80,7 +80,7 @@ export default function CommentSection({ dugnadId }: { dugnadId: string }) {
         />
       </InputRow>
       <CommentList>
-        {comments!.map((comment, i) => (
+        {comments!.length > 0 ? comments!.map((comment, i) => (
           <CommentOuterBody key={i}>
             <CommentBody>
               <CommentData>
@@ -97,7 +97,7 @@ export default function CommentSection({ dugnadId }: { dugnadId: string }) {
               <Label>{comment.likes.length}</Label>
             </LikeButton>
           </CommentOuterBody>
-        ))}
+        )) : <PlainText>Ingen kommentarer</PlainText>}
       </CommentList>
     </Body>
   );

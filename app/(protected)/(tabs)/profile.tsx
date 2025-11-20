@@ -111,7 +111,7 @@ export default function Profile() {
         <ProfilePictureContainer
           onPress={() => { setShowImageUploader(true) }}
         >
-          {(userSession.user?.photoURL && userSession.user.photoURL) !== '' ? (
+          {(userSession.user?.photoURL! && userSession.user.photoURL !== '') ? (
             <Image
               source={{ uri: userSession.user!.photoURL! }}
               style={{

@@ -99,14 +99,10 @@ const Main = styled.View({
   flex: 1,
   alignSelf: 'stretch',
   backgroundColor: colors.bg,
-  paddingTop: 20,
-  gap: 20,
   flexDirection: 'column',
   justifyContent: 'start',
   alignItems: 'center',
 });
-
-const StyledDugnadView = styled(DugnadView)({})
 
 const Body = styled(Column)({
   alignSelf: 'stretch',
